@@ -16,8 +16,9 @@ count = 0
 try:
     ser=serial.Serial("/dev/ttyACM0",9600)  #change ACM number as found from ls /dev/tty/ACM*
 except:
-    ser=serial.Serial("/dev/ttyACM1",9600)
-ser.baudrate=9600
+#    ser=serial.Serial("/dev/ttyACM1",9600)
+    pass
+#ser.baudrate=9600
 
 qtCreatorFile = "untitled.ui"
 Ui_MainWindow, QtBaseClass = uic.loadUiType(qtCreatorFile)
@@ -45,6 +46,8 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.f1.setStyleSheet("background-color: rgb(35,35,35)")
         self.f2.setStyleSheet("background-color: rgb(35,35,35)")
         self.f3.setStyleSheet("background-color: rgb(35,35,35)")
+        self.up.setStyleSheet("background-color: rgb(255,255,255)")
+        self.down.setStyleSheet("background-color: rgb(255,255,255)")
 
     def fan_up(self):
         global count
