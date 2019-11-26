@@ -42,10 +42,10 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.deff.clicked.connect(self.deff_air)
         self.temp.valueChanged.connect(self.temp_change)
         self.ac.setStyleSheet("color: green;")
-        self.f0.setStyleSheet("background-color: rgb(35,35,35)")
-        self.f1.setStyleSheet("background-color: rgb(35,35,35)")
-        self.f2.setStyleSheet("background-color: rgb(35,35,35)")
-        self.f3.setStyleSheet("background-color: rgb(35,35,35)")
+        self.f0.setStyleSheet("background-color: rgb(255,255,255)")
+        self.f1.setStyleSheet("background-color: rgb(255,255,255)")
+        self.f2.setStyleSheet("background-color: rgb(255,255,255)")
+        self.f3.setStyleSheet("background-color: rgb(255,255,255)")
         self.up.setStyleSheet("background-color: rgb(255,255,255)")
         self.down.setStyleSheet("background-color: rgb(255,255,255)")
 
@@ -69,25 +69,27 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
     def fan_down(self):
         global count
         if count == 0:
-            self.f0.setStyleSheet("background-color: rgb(35,35,35)")
+            self.f0.setStyleSheet("background-color: rgb(255,255,255)")
             ser.write(b'fan_0')
             count = 1
         elif count == 1:
-            self.f1.setStyleSheet("background-color: rgb(35,35,35)")
+            self.f1.setStyleSheet("background-color: rgb(255,255,255)")
             ser.write(b'fan_1')
         elif count == 2:
-            self.f2.setStyleSheet("background-color: rgb(35,35,35)")
+            self.f2.setStyleSheet("background-color: rgb(255,255,255)")
             ser.write(b'fan_2')
         elif count == 3:
-            self.f3.setStyleSheet("background-color: rgb(35,35,35)")
+            self.f3.setStyleSheet("background-color: rgb(255,255,255)")
             ser.write(b'fan_3')
         count -= 1
 
     def air_conditioning(self):
         if self.ac.isChecked():
             ser.write(b'ac_on')
+             self.ac.setStyleSheet("background-color: rgb(255,255,255)")
         if self.ac.isChecked() == False:
             ser.write(b'ac_ff')
+             self.setStyleSheet("background-color: rgb(61,174,233)")
 
 
     def circulation(self):
