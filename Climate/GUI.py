@@ -49,6 +49,9 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
 		self.up.setStyleSheet("background-color: rgb(255,255,255)")
 		self.down.setStyleSheet("background-color: rgb(255,255,255)")
 		self.color = "background-color: rgb(61, 174, 233)"
+		ser.write(b'circn')
+		time.sleep(.2)
+		ser.write(b'head_')
 
 
 	def fan_up(self):
