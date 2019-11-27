@@ -41,6 +41,7 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
 		self.def_feet.clicked.connect(self.def_feet_air)
 		self.deff.clicked.connect(self.deff_air)
 		self.temp.valueChanged.connect(self.temp_change)
+		self.ac.setStyleSheet("background-color: rgb(255,255,255)")
 		self.f0.setStyleSheet("background-color: rgb(255,255,255)")
 		self.f1.setStyleSheet("background-color: rgb(255,255,255)")
 		self.f2.setStyleSheet("background-color: rgb(255,255,255)")
