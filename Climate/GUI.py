@@ -48,22 +48,22 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
 		self.f3.setStyleSheet("background-color: rgb(255,255,255)")
 		self.up.setStyleSheet("background-color: rgb(255,255,255)")
 		self.down.setStyleSheet("background-color: rgb(255,255,255)")
-		color = "background-color: rgb(61, 174, 233)"
+		self.color = "background-color: rgb(61, 174, 233)"
 
 
 	def fan_up(self):
 		global count
 		if count == 0:
-			self.f0.setStyleSheet(color)
+			self.f0.setStyleSheet(self.color)
 			ser.write(b'fan_1')
 		elif count == 1:
-			self.f1.setStyleSheet(color)
+			self.f1.setStyleSheet(self.color)
 			ser.write(b'fan_2')
 		elif count == 2:
-			self.f2.setStyleSheet(color)
+			self.f2.setStyleSheet(self.color)
 			ser.write(b'fan_3')
 		elif count == 3:
-			self.f3.setStyleSheet(color)
+			self.f3.setStyleSheet(self.color)
 			ser.write(b'fan_4')
 			count = 2
 		count += 1
@@ -88,7 +88,7 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
 	def air_conditioning(self):
 		if self.ac.isChecked():
 			ser.write(b'ac_on')
-			self.ac.setStyleSheet(color)
+			self.ac.setStyleSheet(self.color)
 		if self.ac.isChecked() == False:
 			ser.write(b'ac_ff')
 			self.ac.setStyleSheet("background-color: rgb(255,255,255)")
@@ -97,7 +97,7 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
 	def circulation(self):
 		if self.circ.isChecked():
 			ser.write(b'circ_')
-			self.circ.setStyleSheet(color)
+			self.circ.setStyleSheet(self.color)
 		if self.circ.isChecked() == False:
 			ser.write(b'circn')
 			self.circ.setStyleSheet("background-color: rgb(255,255,255)")
