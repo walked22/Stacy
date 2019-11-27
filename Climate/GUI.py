@@ -95,8 +95,10 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
 	def circulation(self):
 		if self.circ.isChecked():
 			ser.write(b'circ_')
+			self.circ.setStyleSheet("background-color: rgb(61,174,233)")
 		if self.circ.isChecked() == False:
 			ser.write(b'circn')
+			self.circ.setStyleSheet("background-color: rgb(255,255,255)")
 
 	def head_air(self):
 		ser.write(b'head_')
