@@ -50,7 +50,7 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
 		self.down.setStyleSheet("background-color: rgb(255,255,255)")
 		self.color = "background-color: rgb(61, 174, 233)"
 		ser.write(b'circn')
-		time.sleep(.2)
+		time.sleep(.8)
 		ser.write(b'head_')
 
 
