@@ -16,9 +16,9 @@ count = 0
 try:
 	ser=serial.Serial("/dev/ttyACM0",9600)  #change ACM number as found from ls /dev/tty/ACM*
 except:
-	#ser=serial.Serial("/dev/ttyACM1",9600)
+	ser=serial.Serial("/dev/ttyACM1",9600)
 	pass
-#ser.baudrate=9600
+ser.baudrate=9600
 
 qtCreatorFile = "untitled.ui"
 Ui_MainWindow, QtBaseClass = uic.loadUiType(qtCreatorFile)
@@ -89,7 +89,7 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
 			self.ac.setStyleSheet("background-color: rgb(255,255,255)")
 		if self.ac.isChecked() == False:
 			ser.write(b'ac_ff')
-			self.setStyleSheet("background-color: rgb(61,174,233)")
+			self.ac.setStyleSheet("background-color: rgb(61,174,233)")
 
 
 	def circulation(self):
