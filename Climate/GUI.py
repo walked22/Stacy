@@ -41,7 +41,6 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
 		self.def_feet.clicked.connect(self.def_feet_air)
 		self.deff.clicked.connect(self.deff_air)
 		self.temp.valueChanged.connect(self.temp_change)
-		self.ac.setStyleSheet("color: green;")
 		self.f0.setStyleSheet("background-color: rgb(255,255,255)")
 		self.f1.setStyleSheet("background-color: rgb(255,255,255)")
 		self.f2.setStyleSheet("background-color: rgb(255,255,255)")
@@ -86,10 +85,10 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
 	def air_conditioning(self):
 		if self.ac.isChecked():
 			ser.write(b'ac_on')
-			self.ac.setStyleSheet("background-color: rgb(255,255,255)")
+			self.ac.setStyleSheet("background-color: rgb(61,174,233)")
 		if self.ac.isChecked() == False:
 			ser.write(b'ac_ff')
-			self.ac.setStyleSheet("background-color: rgb(61,174,233)")
+			self.ac.setStyleSheet("background-color: rgb(255,255,255)")
 
 
 	def circulation(self):
