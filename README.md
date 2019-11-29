@@ -1,5 +1,5 @@
 # Stacy
-Code for Modified 1995 Geo Tracker 
+Control PCB for Modified 1995 Geo Tracker 
 
 STACY is a is a custom built printed circuit board that remotely starts, warms up, locks, unlocks and 
 tracks a 1995 Geo Tracker. The board was designed with expandability in mind allowing for future upgrades.
