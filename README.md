@@ -1,4 +1,8 @@
 # Stacy
+
+![Top View](https://github.com/walked22/Stacy/blob/master/StacyPCB/Images/Stacy.png)
+![Bottom View](https://github.com/walked22/Stacy/blob/master/StacyPCB/Images/Stacy-back.png)
+
 Control PCB for Modified 1995 Geo Tracker 
 
 STACY is a is a custom built printed circuit board that remotely starts, warms up, locks, unlocks and 
