@@ -50,7 +50,7 @@ class mainthread(QThread):
 
 	# Convert the value of the sensor into a temperature
 	def read_temp(self):
-		while(True)
+		while(True):
 			lines = self.read_temp_raw() # Read the temperature 'device file'
 			while lines[0].strip()[-3:] != 'YES':
 				time.sleep(0.2)
