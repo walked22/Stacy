@@ -38,7 +38,6 @@ class mainthread(QThread):
 
 	def __init__(self):                                            # PyQT initialization function
 		QThread.__init__(self)
-		self.read_temp()
 
 	def __del__(self):
 		self.wait()
@@ -63,15 +62,14 @@ class mainthread(QThread):
 				temp_f = temp_c * 9.0 / 5.0 + 32.0
 				print(temp_f)
 				self.TEMPSignal.emit(temp_f)
-			time.sleep(.1)
-
 
 class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
 	def __init__(self, parent=None):
 		super(MainApp, self).__init__(parent)
 		QMainWindow.__init__(self)
 		self.setupUi(self)
-		self.mythread1 = mainthread()
+		self.mythread1 = thread()
+		self.myThread.start()
 		self.mythread1.TEMPSignal.connect(self.tempDisp)
 		self.setStyle(QStyleFactory.create('breeze'))
 		self.setStyleSheet("QMainWindow {background: rgb(35,35,35);}")
