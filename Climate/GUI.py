@@ -60,7 +60,7 @@ class mainthread(QThread):
 			return temp_c, temp_f
 
 	while True:
-		self.TEMPSignal.emit(read_temp())
+		TEMPSignal.emit(read_temp())
 		time.sleep(1)
 
 
