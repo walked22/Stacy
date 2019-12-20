@@ -38,6 +38,7 @@ class mainthread(QThread):
 
 	def __init__(self):                                            # PyQT initialization function
 		QThread.__init__(self)
+		#self.read_temp()
 
 	def __del__(self):
 		self.wait()
@@ -49,7 +50,7 @@ class mainthread(QThread):
 		return lines
 
 	# Convert the value of the sensor into a temperature
-	def read_temp(self):
+	def run(self):
 		while(True):
 			lines = self.read_temp_raw() # Read the temperature 'device file'
 			while lines[0].strip()[-3:] != 'YES':
@@ -68,8 +69,8 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
 		super(MainApp, self).__init__(parent)
 		QMainWindow.__init__(self)
 		self.setupUi(self)
-		self.mythread1 = thread()
-		self.myThread.start()
+		self.mythread1 = mainthread()
+		self.mythread1.start()
 		self.mythread1.TEMPSignal.connect(self.tempDisp)
 		self.setStyle(QStyleFactory.create('breeze'))
 		self.setStyleSheet("QMainWindow {background: rgb(35,35,35);}")
