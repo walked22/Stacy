@@ -40,6 +40,9 @@ class mainthread(QThread):
 		QThread.__init__(self)
 		self.read_temp()
 
+	def __del__(self):
+		self.wait()
+
 	def read_temp_raw(self):
 		f = open(device_file, 'r') # Opens the temperature device file
 		lines = f.readlines() # Returns the text
