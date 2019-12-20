@@ -39,9 +39,6 @@ class mainthread(QThread):
 	def __init__(self):                                            # PyQT initialization function
 		QThread.__init__(self)
 		self.read_temp()
-		while True:
-			self.TEMPSignal.emit(self.read_temp())
-			time.sleep(1)
 
 	def read_temp_raw(self):
 		f = open(device_file, 'r') # Opens the temperature device file
@@ -60,7 +57,7 @@ class mainthread(QThread):
 			temp_string = lines[1][equals_pos+2:]
 			temp_c = float(temp_string) / 1000.0
 			temp_f = temp_c * 9.0 / 5.0 + 32.0
-			return temp_c, temp_f
+			print(temp_f)
 
 
 class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
