@@ -59,7 +59,7 @@ class mainthread(QThread):
 				temp_string = lines[1][equals_pos+2:]
 				temp_c = float(temp_string) / 1000.0
 				temp_f = temp_c * 9.0 / 5.0 + 32.0
-				self.TEMPSignal.emit(temp_f)
+				self.TEMPSignal.emit("%.1f" % temp_f)
 
 class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
 	def __init__(self, parent=None):
@@ -89,10 +89,10 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
 		self.f3.setStyleSheet("background-color: rgb(255,255,255)")
 		self.up.setStyleSheet("background-color: rgb(255,255,255)")
 		self.down.setStyleSheet("background-color: rgb(255,255,255)")
-		self.TR.setStyleSheet("background-color: rgb(255,255,255)")
-		self.T2.setStyleSheet("background-color: rgb(255,255,255)")
-		self.TRL.setStyleSheet("background-color: rgb(255,255,255)")
-		self.T2L.setStyleSheet("background-color: rgb(255,255,255)")
+		self.TR.setStyleSheet("color: white")
+		self.T2.setStyleSheet("color: white")
+		self.TRL.setStyleSheet("color: white")
+		self.T2L.setStyleSheet("color: white")
 		self.color = "background-color: rgb(61, 174, 233)"
 		ser.write(b'circn')
 		time.sleep(1)
