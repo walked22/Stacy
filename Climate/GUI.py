@@ -38,7 +38,6 @@ class mainthread(QThread):
 
 	def __init__(self):                                            # PyQT initialization function
 		QThread.__init__(self)
-		#self.read_temp()
 
 	def __del__(self):
 		self.wait()
@@ -49,7 +48,6 @@ class mainthread(QThread):
 		f.close()
 		return lines
 
-	# Convert the value of the sensor into a temperature
 	def run(self):
 		while(True):
 			lines = self.read_temp_raw() # Read the temperature 'device file'
@@ -61,7 +59,6 @@ class mainthread(QThread):
 				temp_string = lines[1][equals_pos+2:]
 				temp_c = float(temp_string) / 1000.0
 				temp_f = temp_c * 9.0 / 5.0 + 32.0
-				print(temp_f)
 				self.TEMPSignal.emit(temp_f)
 
 class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
@@ -92,6 +89,10 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
 		self.f3.setStyleSheet("background-color: rgb(255,255,255)")
 		self.up.setStyleSheet("background-color: rgb(255,255,255)")
 		self.down.setStyleSheet("background-color: rgb(255,255,255)")
+		self.TR.setStyleSheet("background-color: rgb(255,255,255)")
+		self.T2.setStyleSheet("background-color: rgb(255,255,255)")
+		self.TRL.setStyleSheet("background-color: rgb(255,255,255)")
+		self.T2L.setStyleSheet("background-color: rgb(255,255,255)")
 		self.color = "background-color: rgb(61, 174, 233)"
 		ser.write(b'circn')
 		time.sleep(1)

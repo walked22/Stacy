@@ -539,7 +539,7 @@ QPushButton {
      <rect>
       <x>690</x>
       <y>296</y>
-      <width>41</width>
+      <width>101</width>
       <height>21</height>
      </rect>
     </property>
@@ -555,7 +555,7 @@ QPushButton {
      <string>60</string>
     </property>
    </widget>
-   <widget class="QLabel" name="insideTemp_3">
+   <widget class="QLabel" name="TRL">
     <property name="geometry">
      <rect>
       <x>560</x>
@@ -576,7 +576,7 @@ QPushButton {
      <string>INSIDE:</string>
     </property>
    </widget>
-   <widget class="QLabel" name="insideTemp_4">
+   <widget class="QLabel" name="T2L">
     <property name="geometry">
      <rect>
       <x>560</x>
@@ -602,7 +602,7 @@ QPushButton {
      <rect>
       <x>690</x>
       <y>320</y>
-      <width>41</width>
+      <width>91</width>
       <height>21</height>
      </rect>
     </property>
@@ -634,8 +634,8 @@ QPushButton {
    <zorder>deff</zorder>
    <zorder>insideTemp</zorder>
    <zorder>TR</zorder>
-   <zorder>insideTemp_3</zorder>
-   <zorder>insideTemp_4</zorder>
+   <zorder>TRL</zorder>
+   <zorder>T2L</zorder>
    <zorder>T2</zorder>
   </widget>
  </widget>
