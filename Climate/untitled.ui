@@ -534,6 +534,19 @@ QPushButton {
      <string>60</string>
     </property>
    </widget>
+   <widget class="QLabel" name="TR">
+    <property name="geometry">
+     <rect>
+      <x>350</x>
+      <y>110</y>
+      <width>64</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>0</string>
+    </property>
+   </widget>
    <zorder>up</zorder>
    <zorder>down</zorder>
    <zorder>temp</zorder>
@@ -549,6 +562,7 @@ QPushButton {
    <zorder>both</zorder>
    <zorder>deff</zorder>
    <zorder>insideTemp</zorder>
+   <zorder>TR</zorder>
   </widget>
  </widget>
  <resources/>

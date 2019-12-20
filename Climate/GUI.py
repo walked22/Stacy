@@ -1,5 +1,7 @@
 from PyQt5 import QtCore, QtWidgets, QtGui, Qt, uic
 import sys
+import os
+import glob
 import time
 from os import path
 from PyQt5.QtGui import *
@@ -13,6 +15,13 @@ import serial
 
 count = 0
 
+os.system('modprobe w1-gpio')  # Turns on the GPIO module
+os.system('modprobe w1-therm') # Turns on the Temperature module
+
+base_dir = '/sys/bus/w1/devices/'
+device_folder = glob.glob(base_dir + '28*')[0]
+device_file = device_folder + '/w1_slave'
+
 try:
 	ser=serial.Serial("/dev/ttyACM0",9600)  #change ACM number as found from ls /dev/tty/ACM*
 except:
@@ -23,11 +32,45 @@ ser.baudrate=9600
 qtCreatorFile = "untitled.ui"
 Ui_MainWindow, QtBaseClass = uic.loadUiType(qtCreatorFile)
 
+
+class mainthread(QThread):
+	TEMPsignal = pyqtSignal('PyQt_PyObject')
+
+	def __init__(self):                                            # PyQT initialization function
+		QThread.__init__(self)
+		self.read_temp()
+
+	def read_temp_raw():
+		f = open(device_file, 'r') # Opens the temperature device file
+		lines = f.readlines() # Returns the text
+		f.close()
+		return lines
+
+	# Convert the value of the sensor into a temperature
+	def read_temp():
+		lines = read_temp_raw() # Read the temperature 'device file'
+		while lines[0].strip()[-3:] != 'YES':
+			time.sleep(0.2)
+			lines = read_temp_raw()
+		equals_pos = lines[1].find('t=')
+		if equals_pos != -1:
+			temp_string = lines[1][equals_pos+2:]
+			temp_c = float(temp_string) / 1000.0
+			temp_f = temp_c * 9.0 / 5.0 + 32.0
+			return temp_c, temp_f
+
+	while True:
+		self.TEMPSignal.emit(read_temp())
+		time.sleep(1)
+
+
 class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
 	def __init__(self, parent=None):
 		super(MainApp, self).__init__(parent)
 		QMainWindow.__init__(self)
 		self.setupUi(self)
+		self.mythread1 = mainthread()
+		self.mythread1.TEMPsignal.connect(self.tempDisp)
 		self.setStyle(QStyleFactory.create('breeze'))
 		self.setStyleSheet("QMainWindow {background: rgb(35,35,35);}")
 		self.insideTemp.setStyleSheet('color: white')
@@ -55,6 +98,8 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
 		time.sleep(1)
 		ser.write(b'60deg')
 
+	def tempDisp(self, temp):
+		self.TR.setText(str(temp))
 
 	def fan_up(self):
 		global count
