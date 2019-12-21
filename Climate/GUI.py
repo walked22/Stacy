@@ -114,18 +114,22 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
 		self.TRL.setStyleSheet("color: white")
 		self.T2L.setStyleSheet("color: white")
 		self.color = "background-color: rgb(61, 174, 233)"
-		if int(self.mythread1.TEMPSignal) >= 85:
-			ser.write(b'60deg')
-			time.sleep(1)
-			count = 3
-			self.fan_up()
-		if int(self.mythread1.TEMPSignal) <= 55:
-			global count
-			ser.write(b'90deg')
-			time.sleep(1)
-			count = 3
-			self.fan_up()
 
+	def starter(self, t1):
+		num = 0
+		if num == 0:
+			if int(t1) >= 85:
+				ser.write(b'60deg')
+				time.sleep(1)
+				count = 3
+				self.fan_up()
+			if int(t1) <= 55:
+				global count
+				ser.write(b'90deg')
+				time.sleep(1)
+				count = 3
+				self.fan_up()
+		num += 1
 
 	def tempDisp(self, temp):
 		self.TR.setText(str(temp))
