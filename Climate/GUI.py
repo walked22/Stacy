@@ -125,12 +125,20 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
 				time.sleep(1)
 				count = 3
 				self.fan_up()
+				self.f0.setStyleSheet(self.color)
+				self.f1.setStyleSheet(self.color)
+				self.f2.setStyleSheet(self.color)
+				self.f3.setStyleSheet(self.color)
 			if float(t1) <= 55:
 				global count
 				ser.write(b'90deg')
 				time.sleep(1)
 				count = 3
 				self.fan_up()
+				self.f0.setStyleSheet(self.color)
+				self.f1.setStyleSheet(self.color)
+				self.f2.setStyleSheet(self.color)
+				self.f3.setStyleSheet(self.color)
 		num += 1
 
 	def tempDisp(self, temp):
