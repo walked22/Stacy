@@ -14,6 +14,7 @@ import serial
 #import RPi.GPIO as GPIO
 
 count = 0
+num = 0
 
 os.system('modprobe w1-gpio')  # Turns on the GPIO module
 os.system('modprobe w1-therm') # Turns on the Temperature module
@@ -117,7 +118,7 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
 		self.color = "background-color: rgb(61, 174, 233)"
 
 	def starter(self, t1):
-		num = 0
+		global num
 		if num == 0:
 			if float(t1) >= 85:
 				ser.write(b'60deg')
