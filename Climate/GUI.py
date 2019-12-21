@@ -119,12 +119,12 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
 	def starter(self, t1):
 		num = 0
 		if num == 0:
-			if int(t1) >= 85:
+			if float(t1) >= 85:
 				ser.write(b'60deg')
 				time.sleep(1)
 				count = 3
 				self.fan_up()
-			if int(t1) <= 55:
+			if float(t1) <= 55:
 				global count
 				ser.write(b'90deg')
 				time.sleep(1)
