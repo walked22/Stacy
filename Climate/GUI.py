@@ -123,6 +123,7 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
 		if num == 0:
 			if float(t1) >= 85:
 				ser.write(b'60deg')
+				self.temp.setValue(60)
 				time.sleep(1)
 				count = 3
 				self.fan_up()
@@ -133,6 +134,7 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
 			if float(t1) <= 55:
 				global count
 				ser.write(b'90deg')
+				self.temp.setValue(90)
 				time.sleep(1)
 				count = 3
 				self.fan_up()
