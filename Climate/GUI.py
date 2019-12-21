@@ -88,6 +88,7 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
 		self.mythread1 = mainthread()
 		self.mythread1.start()
 		self.mythread1.TEMPSignal.connect(self.tempDisp)
+		self.mythread1.TEMPSignal.connect(self.starter)
 		self.mythread1.TEMP2Signal.connect(self.temp2Disp)
 		self.setStyle(QStyleFactory.create('breeze'))
 		self.setStyleSheet("QMainWindow {background: rgb(35,35,35);}")
