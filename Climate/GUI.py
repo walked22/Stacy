@@ -119,6 +119,7 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
 
 	def starter(self, t1):
 		global num
+		global count
 		if num == 0:
 			if float(t1) >= 85:
 				ser.write(b'60deg')
