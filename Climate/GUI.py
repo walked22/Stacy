@@ -19,8 +19,10 @@ os.system('modprobe w1-gpio')  # Turns on the GPIO module
 os.system('modprobe w1-therm') # Turns on the Temperature module
 
 base_dir = '/sys/bus/w1/devices/'
-device_folder = glob.glob(base_dir + '28*')[0]
+device_folder = glob.glob(base_dir + '28-031097944331')[0]
+device_folder2 = glob.glob(base_dir + '28-0309979409fe')[0]
 device_file = device_folder + '/w1_slave'
+device_file2 = device_folder2 + '/w1_slave'
 
 try:
 	ser=serial.Serial("/dev/ttyACM0",9600)  #change ACM number as found from ls /dev/tty/ACM*
@@ -35,6 +37,7 @@ Ui_MainWindow, QtBaseClass = uic.loadUiType(qtCreatorFile)
 
 class mainthread(QThread):
 	TEMPSignal = pyqtSignal('PyQt_PyObject')
+	TEMP2Signal = pyqtSignal('PyQt_PyObject')
 
 	def __init__(self):                                            # PyQT initialization function
 		QThread.__init__(self)
@@ -48,9 +51,16 @@ class mainthread(QThread):
 		f.close()
 		return lines
 
+	def read_temp_2(self):
+		f2 = open(device_file2, 'r')
+		lines2 = f2.readlines()
+		f2.close()
+		return lines2
+
 	def run(self):
 		while(True):
 			lines = self.read_temp_raw() # Read the temperature 'device file'
+			lines2 = self.read_temp_2()
 			while lines[0].strip()[-3:] != 'YES':
 				time.sleep(0.2)
 				lines = self.read_temp_raw()
@@ -60,6 +70,15 @@ class mainthread(QThread):
 				temp_c = float(temp_string) / 1000.0
 				temp_f = temp_c * 9.0 / 5.0 + 32.0
 				self.TEMPSignal.emit("%.1f" % temp_f)
+			while lines2[0].strip()[-3:] != 'YES':
+				time.sleep(0.2)
+				lines2 = self.read_temp_2()
+			equals_pos2 = lines2[1].find('t=')
+			if equals_pos2 != -1:
+				temp_string2 = lines2[1][equals_pos2+2:]
+				temp_c2 = float(temp_string2) / 1000.0
+				temp_f2 = temp_c2 * 9.0 / 5.0 + 32.0
+				self.TEMP2Signal.emit("%.1f" % temp_f2)
 
 class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
 	def __init__(self, parent=None):
@@ -69,6 +88,7 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
 		self.mythread1 = mainthread()
 		self.mythread1.start()
 		self.mythread1.TEMPSignal.connect(self.tempDisp)
+		self.mythread1.TEMP2Signal.connect(self.temp2Disp)
 		self.setStyle(QStyleFactory.create('breeze'))
 		self.setStyleSheet("QMainWindow {background: rgb(35,35,35);}")
 		self.insideTemp.setStyleSheet('color: white')
@@ -102,6 +122,9 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
 
 	def tempDisp(self, temp):
 		self.TR.setText(str(temp))
+
+	def temp2Disp(self, temp):
+		self.T2.setText(str(temp))
 
 	def fan_up(self):
 		global count
