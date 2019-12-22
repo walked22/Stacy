@@ -26,12 +26,6 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
 		self._pointText = {0: "0", 30: "15", 60: "30", 90: "45", 120: "60",150: "75", 180: "90", 210: "105", 240: "120"}
 		self.dial.valueChanged.connect(self.update)
 
-#	def paintEvent(self, event):
-#		painter = QPainter(self)
-#		painter.setPen(QPen(Qt.black,  5, Qt.SolidLine))
-#		painter.rotate(self.dial.value())
-#		painter.drawRect(40, 40, 400, 200)
-
 	def paintEvent(self, event):
 		painter = QPainter()
 		painter.begin(self)
@@ -43,6 +37,8 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
 		self.drawRPM(painter)
 		self.drawRPMNeedle(painter)
 		self.drawNumber(painter)
+		self.drawCar(painter)
+		self.drawAngle(painter)
 
 		painter.end()
 
@@ -143,18 +139,29 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
 		painter.rotate(self.dial.value())
 		scale = min((self.width() - self._margins)/120.0,(self.height() - self._margins)/120.0)
 		painter.scale(scale/2, scale/2)
-
 		painter.setPen(QPen(Qt.NoPen))
 		painter.setBrush(self.palette().brush(QPalette.Shadow))
-
 		painter.drawPolygon(QPolygon([QPoint(-10, 0), QPoint(0, -45), QPoint(10, 0),QPoint(0, 45), QPoint(-10, 0)]))
-
 		painter.setBrush(self.palette().brush(QPalette.Highlight))
-
 		painter.drawPolygon(QPolygon([QPoint(-5, -25), QPoint(0, -45), QPoint(5, -25),QPoint(0, -30), QPoint(-5, -25)]))
-
 		painter.restore()
 
+	def drawCar(self, painter):
+		painter.save()
+		pic = QPixmap("Geo.png")
+		painter.scale(.1,.1)
+		painter.translate(self.width()*8, self.height()*8)
+		painter.rotate(self.dial.value())
+		painter.drawPixmap(self.rect(), pic)
+		painter.restore()
+
+	def drawAngle(self, painter):
+		painter.save()
+		painter.translate(self.width()*.8, self.height()*.9)
+		painter.setPen(QColor(255,255,255))
+		#painter.setBrush(QColor(255, 0, 0))
+		painter.drawLine(0,0,100,0)
+		painter.restore()
 
 def main():
 	app = QApplication(sys.argv)        # start PyQT
