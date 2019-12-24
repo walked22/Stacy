@@ -42,7 +42,7 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
 def main():
 	app = QApplication(sys.argv)        # start PyQT
 	window = MainApp()
-	#window.setWindowFlags(QtCore.Qt.FramelessWindowHint)
+	window.setWindowFlags(QtCore.Qt.FramelessWindowHint)
 	window.show()
 	app.exec_()
 

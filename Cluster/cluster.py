@@ -24,6 +24,8 @@ fuel = 0
 angle1 = 0
 angle2 = 0
 z1 = .5
+ztemp = .75
+zfuel = .9
 
 class mainthread(QThread):
 	speedSignal = pyqtSignal('PyQt_PyObject')
@@ -51,7 +53,6 @@ class mainthread(QThread):
 					self.angle2Signal.emit(data[4])
 					self.fuelSignal.emit(data[5])
 				except:
-					print('error')
 					pass
 
 class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
@@ -68,10 +69,10 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
 		self.rpms = {0: '0', 30: '1', 60: '2', 90: '3', 120: '4', 150: '5', 180: '6', 210: '7'}
 		self.mythread1.speedSignal.connect(self.updateSpeed)
 		self.mythread1.rpmSignal.connect(self.updateRPM)
-		#self.tempSignal.connect()
+		self.mythread1.tempSignal.connect(self.updateTemp)
 		self.mythread1.angle1Signal.connect(self.updateAngle1)
 		self.mythread1.angle2Signal.connect(self.updateAngle2)
-		#self.fuelSignal.connect()
+		self.mythread1.fuelSignal.connect(self.updateFuel)
 
 	def updateSpeed(self, s):
 		global speed
@@ -103,6 +104,19 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
 		except:
 			pass
 
+	def updateTemp(self, T):
+		global temp
+		try:
+			temp = int(T)
+		except:
+			pass
+
+	def updateFuel(self, F):
+		global fuel
+		try:
+			fuel = int(F)
+		except:
+			pass
 
 	def paintEvent(self, event):
 		painter = QPainter()
@@ -127,6 +141,13 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
 		self.drawCar(painter)
 		self.drawCarBack(painter)
 
+		self.drawTempLines(painter)
+		self.drawTempMarks(painter)
+		self.drawTempNeedle(painter)
+
+		self.drawFuelLines(painter)
+		self.drawFuelMarks(painter)
+		self.drawFuelNeedle(painter)
 
 		painter.end()
 
@@ -149,7 +170,7 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
 				painter.setPen(QColor(61, 174, 233))
 			else:
 				painter.setPen(QColor(255, 255, 255))
-			painter.translate(math.cos(i*30*math.pi/180+x*math.pi/180)*58, math.sin(i*30*math.pi/180+x*math.pi/180)*58)
+			painter.translate(math.cos(i*30*math.pi/180+x*math.pi/180)*60, math.sin(i*30*math.pi/180+x*math.pi/180)*60)
 			painter.drawText(-metrics.width(self.speeds[30*i])/2, 3, self.speeds[30*i])
 			painter.restore()
 			i += 1
@@ -217,7 +238,7 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
 				painter.setPen(QColor(61, 174, 233))
 			else:
 				painter.setPen(QColor(255, 255, 255))
-			painter.translate(math.cos(i*30*math.pi/180+x*math.pi/180)*58, math.sin(i*30*math.pi/180+x*math.pi/180)*58)
+			painter.translate(math.cos(i*30*math.pi/180+x*math.pi/180)*59, math.sin(i*30*math.pi/180+x*math.pi/180)*59)
 			painter.drawText(-metrics.width(self.speeds[30*i])/2, 3, self.speeds[30*i])
 			painter.restore()
 			i += 1
@@ -359,7 +380,7 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
 		font.setPixelSize(30)
 		metrics = QFontMetricsF(font)
 		painter.setFont(font)
-		painter.translate(self.width()*.8, self.height()*.8)
+		painter.translate(self.width()*.5, self.height()*.85)
 		painter.scale(.5,.5)
 		painter.rotate(-angle1)
 		painter.drawPixmap(0, 0, pic)
@@ -374,17 +395,119 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
 		font.setPixelSize(50)
 		metrics = QFontMetricsF(font)
 		painter.setFont(font)
-		painter.translate(self.width()*.7, self.height()*.8)
+		painter.translate(self.width()*.35, self.height()*.85)
 		painter.scale(.3,.3)
 		painter.rotate(-angle2)
 		painter.drawPixmap(0, 0, pic)
 		painter.drawText(QRectF(135,75,60,40), Qt.AlignCenter, str(angle2)+u"\u00b0")
 		painter.restore()
 
-
 ################################------Temp------##########################################
 
+	def drawTempLines(self, painter):
+		global temp
+		global r1
+		global ztemp
+		painter.save()
+		painter.translate(self.width()/4, self.height()/2)
+		scale = min((self.width() - self._margins)/120.0, (self.height() - self._margins)/120.0)
+		painter.scale(scale*.75, scale*.75)
+		painter.setPen(QColor(255, 0, 0))
+		painter.drawArc(-50, -50, 100, 100, -0*16, -90*16+temp*ztemp*16)
+		if temp <= 100:
+			painter.setPen(QColor(61, 174, 233))
+		else:
+			painter.setPen(QColor(255, 0, 0))
+		painter.drawArc(-50,-50,100,100, -90*16, 0+temp*ztemp*16)
+		painter.restore()
 
+	def drawTempMarks(self, painter):
+		global temp
+		painter.save()
+		painter.translate(self.width()/4, self.height()/2+230)
+		font = QFont(self.font())
+		font.setPixelSize(35)
+		metrics = QFontMetricsF(font)
+		font.setItalic(1)
+		painter.setFont(font)
+		painter.drawText(-metrics.width('C')/2, 3, 'C')
+		painter.translate(215,-220)
+		if temp >= 100:
+			painter.setPen(QColor(255, 0, 0))
+		else:
+			painter.setPen(QColor(255, 255, 255))
+		painter.drawText(-metrics.width('H')/2, 3, 'H')
+		painter.restore()
+
+	def drawTempNeedle(self, painter):
+		global temp
+		global ztemp
+		painter.save()
+		painter.translate(self.width()/4, self.height()/2)
+		painter.rotate(-temp*ztemp+180)
+		scale = min((self.width() - self._margins)/120.0,(self.height() - self._margins)/120.0)
+		painter.scale(scale*.75, scale*.75)
+		painter.setPen(QPen(Qt.NoPen))
+		painter.setBrush(QColor(61, 174, 233))
+		painter.drawPolygon(QPolygon([QPoint(-1, -54), QPoint(1, -54), QPoint(1, -46), QPoint(-1, -46)]))
+		painter.restore()
+
+################################------Fuel------##########################################
+
+	def drawFuelLines(self, painter):
+		global fuel
+		global r1
+		global zfuel
+		painter.save()
+		painter.translate(self.width()*.75, self.height()/2)
+		scale = min((self.width() - self._margins)/120.0, (self.height() - self._margins)/120.0)
+		painter.scale(scale*.75, scale*.75)
+		painter.drawArc(-50, -50, 100, 100, -0*16, -90*16+fuel*zfuel*16)
+		if fuel <= 20:
+			painter.setPen(QColor(255, 0, 0))
+		elif 20 < fuel <= 80:
+			painter.setPen(QColor(61, 174, 233))
+		else:
+			painter.setPen(QColor(0, 255, 0))
+		painter.drawArc(-50,-50,100,100, -90*16, 0+fuel*zfuel*16)
+		painter.restore()
+
+	def drawFuelMarks(self, painter):
+		global fuel
+		painter.save()
+		painter.translate(self.width()*.75, self.height()/2+230)
+		font = QFont(self.font())
+		font.setPixelSize(35)
+		metrics = QFontMetricsF(font)
+		font.setItalic(1)
+		painter.setFont(font)
+		if fuel <= 20:
+			painter.setPen(QColor(255, 0, 0))
+		else:
+			painter.setPen(QColor(255, 255, 255))
+		painter.drawText(-metrics.width('E')/2, 3, 'E')
+		painter.translate(215,-220)
+		if 20 < fuel <= 80:
+			painter.setPen(QColor(255, 255, 255))
+		elif fuel > 80:
+			painter.setPen(QColor(0, 255, 0))
+		else:
+			painter.setPen(QColor(255, 255, 255))
+		painter.drawText(-metrics.width('F')/2, 3, 'F')
+		painter.restore()
+
+	def drawFuelNeedle(self, painter):
+		global fuel
+		global zfuel
+		painter.save()
+		painter.translate(self.width()*.75, self.height()/2)
+		painter.rotate(-fuel*zfuel+180)
+		scale = min((self.width() - self._margins)/120.0,(self.height() - self._margins)/120.0)
+		painter.scale(scale*.75, scale*.75)
+		painter.setPen(QPen(Qt.NoPen))
+		painter.setBrush(QColor(61, 174, 233))
+		painter.drawPolygon(QPolygon([QPoint(-1, -54), QPoint(1, -54), QPoint(1, -46), QPoint(-1, -46)]))
+		painter.restore()
 
 def main():
 	app = QApplication(sys.argv)        # start PyQT
