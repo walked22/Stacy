@@ -13,95 +13,9 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
-  <widget class="QWidget" name="centralwidget">
-   <widget class="QDial" name="dial">
-    <property name="geometry">
-     <rect>
-      <x>440</x>
-      <y>400</y>
-      <width>161</width>
-      <height>121</height>
-     </rect>
-    </property>
-    <property name="maximum">
-     <number>120</number>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label">
-    <property name="geometry">
-     <rect>
-      <x>490</x>
-      <y>540</y>
-      <width>64</width>
-      <height>17</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>TextLabel</string>
-    </property>
-   </widget>
-   <widget class="QDial" name="dial1">
-    <property name="geometry">
-     <rect>
-      <x>430</x>
-      <y>20</y>
-      <width>161</width>
-      <height>121</height>
-     </rect>
-    </property>
-    <property name="maximum">
-     <number>7</number>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_2">
-    <property name="geometry">
-     <rect>
-      <x>480</x>
-      <y>140</y>
-      <width>64</width>
-      <height>17</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>TextLabel</string>
-    </property>
-   </widget>
-  </widget>
+  <widget class="QWidget" name="centralwidget"/>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <resources/>
- <connections>
-  <connection>
-   <sender>dial</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>label</receiver>
-   <slot>setNum(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>610</x>
-     <y>420</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>611</x>
-     <y>498</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>dial1</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>label_2</receiver>
-   <slot>setNum(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>510</x>
-     <y>80</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>511</x>
-     <y>148</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>
