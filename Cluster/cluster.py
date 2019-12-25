@@ -27,6 +27,18 @@ z1 = .5
 ztemp = .75
 zfuel = .9
 
+seatbelt = 0
+batt = 0
+engine = 0
+highs = 0
+lights = 0
+oil = 0
+fourWheel = 0
+fourLow = 0
+brake = 0
+left = 0
+right = 0
+
 class mainthread(QThread):
 	speedSignal = pyqtSignal('PyQt_PyObject')
 	rpmSignal = pyqtSignal('PyQt_PyObject')
@@ -34,6 +46,7 @@ class mainthread(QThread):
 	angle2Signal = pyqtSignal('PyQt_PyObject')
 	tempSignal = pyqtSignal('PyQt_PyObject')
 	fuelSignal = pyqtSignal('PyQt_PyObject')
+	warningSignal = pyqtSignal('PyQt_PyObject')
 
 	def __init__(self):                                            # PyQT initialization function
 		QThread.__init__(self)
@@ -52,6 +65,8 @@ class mainthread(QThread):
 					self.angle1Signal.emit(data[3])
 					self.angle2Signal.emit(data[4])
 					self.fuelSignal.emit(data[5])
+
+					self.warningSignal.emit(data[6:])
 				except:
 					pass
 
@@ -73,12 +88,13 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
 		self.mythread1.angle1Signal.connect(self.updateAngle1)
 		self.mythread1.angle2Signal.connect(self.updateAngle2)
 		self.mythread1.fuelSignal.connect(self.updateFuel)
+		self.mythread1.warningSignal.connect(self.updateWarning)
 
 	def updateSpeed(self, s):
 		global speed
 		try:
 			speed = int(s)
-			print(speed)
+			#print(speed)
 			self.update()
 		except:
 			pass
@@ -118,6 +134,31 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
 		except:
 			pass
 
+	def updateWarning(self, W):
+		global seatbelt
+		global batt
+		global engine
+		global highs
+		global oil
+		global fourWheel
+		global fourLow
+		global brake
+		global left
+		global right
+		try:
+			seatbelt = int(W[0])
+			batt = int(W[1])
+			engine = int(W[2])
+			highs = int(W[3])
+			oil = int(W[4])
+			fourWheel = int(W[5])
+			fourLow = int(W[6])
+			brake = int(W[7])
+			left = int(W[8])
+			right = int(W[9])
+		except:
+			pass
+
 	def paintEvent(self, event):
 		painter = QPainter()
 		painter.begin(self)
@@ -148,6 +189,8 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
 		self.drawFuelLines(painter)
 		self.drawFuelMarks(painter)
 		self.drawFuelNeedle(painter)
+
+		self.drawWarnings(painter)
 
 		painter.end()
 
@@ -508,6 +551,97 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
 		painter.setBrush(QColor(61, 174, 233))
 		painter.drawPolygon(QPolygon([QPoint(-1, -54), QPoint(1, -54), QPoint(1, -46), QPoint(-1, -46)]))
 		painter.restore()
+
+################################------Warning Indicators------##########################################
+	
+	def drawWarnings(self, painter):
+		global seatbelt
+		global batt
+		global engine
+		global highs
+		global lights
+		global oil
+		global fourWheel
+		global fourLow
+		global brake
+		global left
+		global right
+		painter.save()
+		sb_pic = QPixmap("seatbelt.png")
+		oil_pic = QPixmap("oil.png")
+		batt_pic = QPixmap("batt.png")
+		highs_pic = QPixmap("highs.png")
+		left_pic = QPixmap("left.png")
+		right_pic = QPixmap("right.png")
+		font = QFont(self.font())
+		font.setPixelSize(14)
+		metrics = QFontMetricsF(font)
+		painter.translate(self.width()*.30, self.height()*.03)
+		painter.scale(.15,.15)
+		if seatbelt == 1:
+			painter.drawPixmap(0, 0, sb_pic)
+		#painter.drawText(QRectF(135,75,60,40), Qt.AlignCenter, str(angle2)+u"\u00b0")
+		if batt == 1:
+			painter.resetTransform()
+			painter.translate(self.width()*.5-50, self.height()*.03)
+			painter.scale(.08,.08)
+			painter.drawPixmap(self.rect(), batt_pic)
+		if oil == 1:
+			painter.resetTransform()
+			painter.translate(self.width()*.7-50, self.height()*.03)
+			painter.scale(.1,.08)
+			painter.drawPixmap(self.rect(), oil_pic)
+		if engine == 1:
+			painter.setPen(QColor(255, 0, 0))
+			font.setBold(1)
+			painter.setFont(font)
+			painter.resetTransform()
+			painter.translate(self.width()/4-5, self.height()/3)
+			painter.drawText(-metrics.width('CHECK')/2, 3, 'CHECK')
+			painter.translate(0,15)
+			painter.drawText(-metrics.width('ENGINE')/2, 3, 'ENGINE')
+		if fourWheel == 1:
+			painter.setPen(QColor(61, 174, 233))
+			font.setBold(1)
+			font.setPixelSize(20)
+			painter.setFont(font)
+			painter.resetTransform()
+			painter.translate(self.width()*.75-13, self.height()/3)
+			painter.drawText(-metrics.width('4WD')/2, 3, '4WD')
+		if fourLow == 1:
+			painter.resetTransform()
+			painter.setPen(QColor(61, 174, 233))
+			font.setBold(1)
+			font.setPixelSize(20)
+			painter.setFont(font)
+			painter.translate(self.width()*.75+30, self.height()/3)
+			painter.drawText(-metrics.width('-L')/2, 3, '-L')
+		if brake == 1:
+			painter.resetTransform()
+			painter.setPen(QColor(255, 0, 0))
+			font.setBold(1)
+			font.setPixelSize(20)
+			painter.setFont(font)
+			painter.translate(self.width()/2-metrics.width('BRAKE')/2, self.height()*.75)
+			painter.drawText(-metrics.width('BRAKE')/2, 3, 'BRAKE')
+		if highs == 1:
+			painter.resetTransform()
+			painter.translate(self.width()*.5-40, self.height()*.17)
+			painter.scale(.06,.06)
+			painter.drawPixmap(self.rect(), highs_pic)
+		if left == 1:
+			painter.resetTransform()
+			painter.translate(self.width()*.2-140, self.height()*.84)
+			painter.scale(.15, .15)
+			painter.drawPixmap(self.rect(), left_pic)
+		if right == 1:
+			painter.resetTransform()
+			painter.translate(self.width()*.8, self.height()*.84)
+			painter.scale(.15,.15)
+			painter.drawPixmap(self.rect(), right_pic)
+		painter.restore()
+
+
 
 def main():
 	app = QApplication(sys.argv)        # start PyQT

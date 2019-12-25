@@ -28,6 +28,16 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
 
 	def thread1(self):
 		while True:
+			sb = (lambda: 0, lambda: 1)[self.seatbelt.isChecked()]()
+			batt_s = (lambda: 0, lambda: 1)[self.batt.isChecked()]()
+			engine_s = (lambda: 0, lambda: 1)[self.engine.isChecked()]()
+			highs_s = (lambda: 0, lambda: 1)[self.highs.isChecked()]()
+			oil_s = (lambda: 0, lambda: 1)[self.oil.isChecked()]()
+			fourWheel_s = (lambda: 0, lambda: 1)[self.fourWheel.isChecked()]()
+			fourLow_s = (lambda: 0, lambda: 1)[self.low.isChecked()]()
+			brake_s = (lambda: 0, lambda: 1)[self.brake.isChecked()]()
+			left_s = (lambda: 0, lambda: 1)[self.left.isChecked()]()
+			right_s = (lambda: 0, lambda: 1)[self.right.isChecked()]()
 			speed = self.speed.value()
 			rpm = self.RPM.value()
 			temp = self.temp.value()
@@ -35,7 +45,7 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
 			angle2 = self.angle2.value()
 			fuel = self.fuel.value()
 			with open('data.txt', 'w') as file:
-				file.write('{},{},{},{},{},{}'.format(speed,rpm,temp,angle1,angle2,fuel))
+				file.write('{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}'.format(speed, rpm, temp, angle1, angle2, fuel, sb, batt_s, engine_s, highs_s, oil_s, fourWheel_s, fourLow_s, brake_s, left_s, right_s))
 			time.sleep(.01)
 
 
