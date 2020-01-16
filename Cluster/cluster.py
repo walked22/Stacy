@@ -14,6 +14,8 @@ import math
 qtCreatorFile = "speed.ui"
 Ui_MainWindow, QtBaseClass = uic.loadUiType(qtCreatorFile)
 
+color = QColor(61, 174, 233)
+
 r = -120
 r1 = -150
 z = 100/3
@@ -78,7 +80,7 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
 		self.mythread1 = mainthread()
 		self.mythread1.start()
 		self.setStyle(QStyleFactory.create('breeze'))
-		self.setStyleSheet("QMainWindow {background: rgb(35,35,35);}")
+		self.setStyleSheet("QMainWindow {background: rgb(0,0,0);}")
 		self._margins = 10
 		self.speeds = {0: "0", 30: "15", 60: "30", 90: "45", 120: "60", 150: "75", 180: "90", 210: "105", 240: "120"}
 		self.rpms = {0: '0', 30: '1', 60: '2', 90: '3', 120: '4', 150: '5', 180: '6', 210: '7'}
@@ -92,8 +94,13 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
 
 	def updateSpeed(self, s):
 		global speed
+		global color
 		try:
 			speed = int(s)
+			if 68.3 <= speed <= 69.7:
+				color = QColor(255,20,147)
+			else:
+				color = QColor(61, 174, 233)
 			#print(speed)
 			self.update()
 		except:
@@ -166,16 +173,13 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
 
 		painter.fillRect(event.rect(), self.palette().brush(QPalette.Window))
 
-		#self.drawSpeedLines(painter)
 		self.drawSpeed(painter)
-		#self.drawSpeedNumbers(painter)
-		self.drawSpeedLinesSimple(painter)
-		self.drawSpeedNumbersSimple(painter)
+		self.drawSpeedLines(painter)
+		self.drawSpeedNumbers(painter)
 		#self.drawSpeedNeedle(painter)
-		self.drawSpeedNeedleSimple(painter)
 
 		self.drawRPMLines(painter)
-		self.drawRPMNeedle(painter)
+		#self.drawRPMNeedle(painter)
 		self.drawRPM(painter)
 		self.drawRPMNumbers(painter)
 
@@ -196,58 +200,7 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
 
 ################################------Speed------##########################################
 
-	def drawSpeedNumbers(self, painter):
-		global speed
-		x = -210
-		i = 0 
-		while i < 9:
-			painter.save()
-			painter.translate(self.width()/4, self.height()/2)
-			scale = min((self.width() - self._margins)/120.0, (self.height() - self._margins)/120.0)
-			painter.scale(scale*.75, scale*.75)
-			font = QFont(self.font())
-			font.setPixelSize(8)
-			metrics = QFontMetricsF(font)
-			painter.setFont(font)
-			if speed*2-6 <= i*30 and speed*2+6 >= i*30:
-				painter.setPen(QColor(61, 174, 233))
-			else:
-				painter.setPen(QColor(255, 255, 255))
-			painter.translate(math.cos(i*30*math.pi/180+x*math.pi/180)*60, math.sin(i*30*math.pi/180+x*math.pi/180)*60)
-			painter.drawText(-metrics.width(self.speeds[30*i])/2, 3, self.speeds[30*i])
-			painter.restore()
-			i += 1
-
 	def drawSpeedLines(self, painter):
-		global speed
-		global r
-		painter.save()
-		painter.translate(self.width()/4, self.height()/2)
-		scale = min((self.width() - self._margins)/120.0, (self.height() - self._margins)/120.0)
-		painter.scale(scale*.75, scale*.75)
-		painter.rotate(r)
-		i = 0
-		while i < 241:
-			if i % 30 == 0:
-				if speed*2+6 >= i:
-					painter.setPen(QColor(61, 174, 233))
-				else:
-					painter.setPen(QColor(255, 255, 255))
-				painter.drawLine(0, -40, 0, -50)
-			else:
-				if speed >= 85:
-					painter.setPen(QColor(255, 0, 0))
-				else:
-					if speed*2+6 >= i:
-						painter.setPen(QColor(67, 174, 233))
-					else:
-						painter.setPen(QColor(255, 255, 255))
-				painter.drawLine(0, -45, 0, -50)
-			painter.rotate(7.5)
-			i += 7.5
-		painter.restore()
-
-	def drawSpeedLinesSimple(self, painter):
 		global speed
 		global r1
 		global z1
@@ -255,15 +208,15 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
 		painter.translate(self.width()/4, self.height()/2)
 		scale = min((self.width() - self._margins)/120.0, (self.height() - self._margins)/120.0)
 		painter.scale(scale*.75, scale*.75)
-		painter.drawArc(-50, -50, 100, 100, 30*16, 210*16-speed/z1*16)
+		#painter.drawArc(-50, -50, 100, 100, 30*16, 210*16-speed/z1*16)
 		if speed <= 85:
-			painter.setPen(QColor(61, 174, 233))
+			painter.setPen(color)
 		else:
 			painter.setPen(QColor(255, 0, 0))
 		painter.drawArc(-50,-50,100,100, 240*16, -speed/z1*16)
 		painter.restore()
 
-	def drawSpeedNumbersSimple(self, painter):
+	def drawSpeedNumbers(self, painter):
 		global speed
 		global z1
 		x = -240
@@ -278,15 +231,16 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
 			metrics = QFontMetricsF(font)
 			painter.setFont(font)
 			if speed/z1-6 <= i*30 and speed/z1+6 >= i*30:
-				painter.setPen(QColor(61, 174, 233))
+				painter.setPen(color)
 			else:
 				painter.setPen(QColor(255, 255, 255))
 			painter.translate(math.cos(i*30*math.pi/180+x*math.pi/180)*59, math.sin(i*30*math.pi/180+x*math.pi/180)*59)
-			painter.drawText(-metrics.width(self.speeds[30*i])/2, 3, self.speeds[30*i])
+			if speed >= int(self.speeds[30*i]):
+				painter.drawText(-metrics.width(self.speeds[30*i])/2, 3, self.speeds[30*i])
 			painter.restore()
 			i += 1
 
-	def drawSpeedNeedleSimple(self, painter):
+	def drawSpeedNeedle(self, painter):
 		global speed
 		global z1
 		global r1
@@ -296,7 +250,7 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
 		scale = min((self.width() - self._margins)/120.0,(self.height() - self._margins)/120.0)
 		painter.scale(scale*.75, scale*.75)
 		painter.setPen(QPen(Qt.NoPen))
-		painter.setBrush(QColor(61, 174, 233))
+		painter.setBrush(color)
 		painter.drawPolygon(QPolygon([QPoint(-1, -54), QPoint(1, -54), QPoint(1, -46), QPoint(-1, -46)]))
 		painter.restore()
 
@@ -320,23 +274,6 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
 		painter.drawText(QRectF(-20,2,40,20), Qt.AlignCenter, 'MPH')
 		painter.restore()
 
-	def drawSpeedNeedle(self, painter):
-		global r
-		global speed
-		if isinstance(speed, int):
-			painter.save()
-			painter.translate(self.width()/4, self.height()/2)
-			painter.rotate(speed*2+r)
-			scale = min((self.width() - self._margins)/120.0,(self.height() - self._margins)/120.0)
-			painter.scale(scale*.75, scale*.75)
-			painter.setPen(QPen(Qt.NoPen))
-			painter.setBrush(QColor(255, 255, 255))
-			painter.drawPolygon(QPolygon([QPoint(-3, 0), QPoint(0, -35), QPoint(3, 0), QPoint(0, 15), QPoint(-3, 0)]))
-			painter.setBrush(QColor(61, 174, 233))
-			painter.drawPolygon(QPolygon([QPoint(-1.5, -25), QPoint(0, -35), QPoint(1.5, -25), QPoint(-1.5, -25)]))
-			painter.restore()
-
-
 ################################------RPM------##########################################
 
 	def drawRPMNumbers(self, painter):
@@ -354,11 +291,12 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
 			metrics = QFontMetricsF(font)
 			painter.setFont(font)
 			if rpm/z-6 <= i*30 and rpm/z+6 >= i*30:
-				painter.setPen(QColor(61, 174, 233))
+				painter.setPen(color)
 			else:
 				painter.setPen(QColor(255, 255, 255))
 			painter.translate(math.cos(i*30*math.pi/180+x*math.pi/180)*58, math.sin(i*30*math.pi/180+x*math.pi/180)*58)
-			painter.drawText(-metrics.width(self.rpms[30*i])/2, 3, self.rpms[30*i])
+			if rpm/1000 >= int(self.rpms[30*i]):
+				painter.drawText(-metrics.width(self.rpms[30*i])/2, 3, self.rpms[30*i])
 			painter.restore()
 			i += 1
 
@@ -370,9 +308,9 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
 		painter.translate(self.width()*.75, self.height()/2)
 		scale = min((self.width() - self._margins)/120.0, (self.height() - self._margins)/120.0)
 		painter.scale(scale*.75, scale*.75)
-		painter.drawArc(-50, -50, 100, 100, 30*16, 210*16-rpm/z*16)
+		#painter.drawArc(-50, -50, 100, 100, 30*16, 210*16-rpm/z*16)
 		if rpm <= 4500:
-			painter.setPen(QColor(61, 174, 233))
+			painter.setPen(color)
 		else:
 			painter.setPen(QColor(255, 0, 0))
 		painter.drawArc(-50,-50,100,100, 240*16, -rpm/z*16)
@@ -388,7 +326,7 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
 		scale = min((self.width() - self._margins)/120.0,(self.height() - self._margins)/120.0)
 		painter.scale(scale*.75, scale*.75)
 		painter.setPen(QPen(Qt.NoPen))
-		painter.setBrush(QColor(61, 174, 233))
+		painter.setBrush(color)
 		painter.drawPolygon(QPolygon([QPoint(-1, -54), QPoint(1, -54), QPoint(1, -46), QPoint(-1, -46)]))
 		painter.restore()
 
@@ -403,7 +341,7 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
 		metrics = QFontMetricsF(font)
 		painter.setFont(font)
 		if rpm <= 4500:
-			painter.setPen(QColor(61, 174, 233))
+			painter.setPen(color)
 		else:
 			painter.setPen(QColor(255, 0, 0))
 		painter.drawText(QRectF(-20,-10,40,20), Qt.AlignCenter, str(rpm))
@@ -458,7 +396,7 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
 		painter.setPen(QColor(255, 0, 0))
 		painter.drawArc(-50, -50, 100, 100, -0*16, -90*16+temp*ztemp*16)
 		if temp <= 100:
-			painter.setPen(QColor(61, 174, 233))
+			painter.setPen(color)
 		else:
 			painter.setPen(QColor(255, 0, 0))
 		painter.drawArc(-50,-50,100,100, -90*16, 0+temp*ztemp*16)
@@ -491,7 +429,7 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
 		scale = min((self.width() - self._margins)/120.0,(self.height() - self._margins)/120.0)
 		painter.scale(scale*.75, scale*.75)
 		painter.setPen(QPen(Qt.NoPen))
-		painter.setBrush(QColor(61, 174, 233))
+		painter.setBrush(color)
 		painter.drawPolygon(QPolygon([QPoint(-1, -54), QPoint(1, -54), QPoint(1, -46), QPoint(-1, -46)]))
 		painter.restore()
 
@@ -509,7 +447,7 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
 		if fuel <= 20:
 			painter.setPen(QColor(255, 0, 0))
 		elif 20 < fuel <= 80:
-			painter.setPen(QColor(61, 174, 233))
+			painter.setPen(color)
 		else:
 			painter.setPen(QColor(0, 255, 0))
 		painter.drawArc(-50,-50,100,100, -90*16, 0+fuel*zfuel*16)
@@ -548,7 +486,7 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
 		scale = min((self.width() - self._margins)/120.0,(self.height() - self._margins)/120.0)
 		painter.scale(scale*.75, scale*.75)
 		painter.setPen(QPen(Qt.NoPen))
-		painter.setBrush(QColor(61, 174, 233))
+		painter.setBrush(color)
 		painter.drawPolygon(QPolygon([QPoint(-1, -54), QPoint(1, -54), QPoint(1, -46), QPoint(-1, -46)]))
 		painter.restore()
 
@@ -601,7 +539,7 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
 			painter.translate(0,15)
 			painter.drawText(-metrics.width('ENGINE')/2, 3, 'ENGINE')
 		if fourWheel == 1:
-			painter.setPen(QColor(61, 174, 233))
+			painter.setPen(color)
 			font.setBold(1)
 			font.setPixelSize(20)
 			painter.setFont(font)
@@ -610,7 +548,7 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
 			painter.drawText(-metrics.width('4WD')/2, 3, '4WD')
 		if fourLow == 1:
 			painter.resetTransform()
-			painter.setPen(QColor(61, 174, 233))
+			painter.setPen(color)
 			font.setBold(1)
 			font.setPixelSize(20)
 			painter.setFont(font)

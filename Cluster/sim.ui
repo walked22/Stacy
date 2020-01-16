@@ -384,6 +384,19 @@
      <string>batt</string>
     </property>
    </widget>
+   <widget class="QCheckBox" name="animate">
+    <property name="geometry">
+     <rect>
+      <x>160</x>
+      <y>680</y>
+      <width>93</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>animate</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
