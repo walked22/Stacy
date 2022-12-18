@@ -13,8 +13,7 @@ from PyQt5.QtGui import QColor
 import serial
 #import RPi.GPIO as GPIO
 
-count = 0
-num = 0
+
 
 os.system('modprobe w1-gpio')  # Turns on the GPIO module
 os.system('modprobe w1-therm') # Turns on the Temperature module
@@ -91,7 +90,7 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
 		self.mythread1.TEMPSignal.connect(self.tempDisp)
 		self.mythread1.TEMPSignal.connect(self.starter)
 		self.mythread1.TEMP2Signal.connect(self.temp2Disp)
-		self.setStyle(QStyleFactory.create('breeze'))
+		self.setStyle(QStyleFactory.create('Fusion'))
 		self.setStyleSheet("QMainWindow {background: rgb(35,35,35);}")
 		self.insideTemp.setStyleSheet('color: white')
 		self.up.clicked.connect(self.fan_up)
@@ -116,33 +115,32 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
 		self.TRL.setStyleSheet("color: white")
 		self.T2L.setStyleSheet("color: white")
 		self.color = "background-color: rgb(61, 174, 233)"
+		self.count = 0
+		self.num = 0
 
 	def starter(self, t1):
-		global num
-		global count
-		if num == 0:
+		if self.num == 0:
 			if float(t1) >= 85:
 				ser.write(b'60deg')
 				self.temp.setValue(60)
 				time.sleep(1)
-				count = 3
+				self.count = 3
 				self.fan_up()
 				self.f0.setStyleSheet(self.color)
 				self.f1.setStyleSheet(self.color)
 				self.f2.setStyleSheet(self.color)
 				self.f3.setStyleSheet(self.color)
 			if float(t1) <= 55:
-				global count
 				ser.write(b'90deg')
 				self.temp.setValue(90)
 				time.sleep(1)
-				count = 3
+				self.count = 3
 				self.fan_up()
 				self.f0.setStyleSheet(self.color)
 				self.f1.setStyleSheet(self.color)
 				self.f2.setStyleSheet(self.color)
 				self.f3.setStyleSheet(self.color)
-		num += 1
+		self.num += 1
 
 	def tempDisp(self, temp):
 		self.TR.setText(str(temp))
@@ -151,38 +149,36 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
 		self.T2.setText(str(temp))
 
 	def fan_up(self):
-		global count
-		if count == 0:
+		if self.count == 0:
 			self.f0.setStyleSheet(self.color)
 			ser.write(b'fan_1')
-		elif count == 1:
+		elif self.count == 1:
 			self.f1.setStyleSheet(self.color)
 			ser.write(b'fan_2')
 		elif count == 2:
 			self.f2.setStyleSheet(self.color)
 			ser.write(b'fan_3')
-		elif count == 3:
+		elif self.count == 3:
 			self.f3.setStyleSheet(self.color)
 			ser.write(b'fan_4')
-			count = 2
-		count += 1
+			self.count = 2
+		self.count += 1
 
 	def fan_down(self):
-		global count
-		if count == 0:
+		if self.count == 0:
 			self.f0.setStyleSheet("background-color: rgb(255,255,255)")
 			ser.write(b'fan_0')
-			count = 1
-		elif count == 1:
+			self.count = 1
+		elif self.count == 1:
 			self.f1.setStyleSheet("background-color: rgb(255,255,255)")
 			ser.write(b'fan_1')
-		elif count == 2:
+		elif self.count == 2:
 			self.f2.setStyleSheet("background-color: rgb(255,255,255)")
 			ser.write(b'fan_2')
-		elif count == 3:
+		elif self.count == 3:
 			self.f3.setStyleSheet("background-color: rgb(255,255,255)")
 			ser.write(b'fan_3')
-		count -= 1
+		self.count -= 1
 
 	def air_conditioning(self):
 		if self.ac.isChecked():
