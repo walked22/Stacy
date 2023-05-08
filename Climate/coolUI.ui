@@ -445,10 +445,11 @@ QSlider::handle:horizontal {
     margin: -14px -20px;
     border-radius: 14px;
 }
+/*
 QSlider::sub-page:horizontal {
     height: 2px;
     margin: 20px 0px; 
-    /* background-color: rgb(255, 255, 255); */
+    background-color: rgb(255, 255, 255);
 
 }
 QSlider::add-page:horizontal {
@@ -456,7 +457,7 @@ QSlider::add-page:horizontal {
     margin: 20px 0px; 
     background-color: rgb(52, 59, 72);
 }
-</string>
+*/</string>
     </property>
     <property name="orientation">
      <enum>Qt::Horizontal</enum>
@@ -770,25 +771,6 @@ color: rgb(255, 255, 255);</string>
      <bool>true</bool>
     </property>
    </widget>
-   <widget class="QLabel" name="roll_i">
-    <property name="geometry">
-     <rect>
-      <x>800</x>
-      <y>20</y>
-      <width>131</width>
-      <height>131</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="pixmap">
-     <pixmap>../../../../OneDrive/Pictures/face.png</pixmap>
-    </property>
-    <property name="scaledContents">
-     <bool>true</bool>
-    </property>
-   </widget>
    <widget class="QLabel" name="label_4">
     <property name="geometry">
      <rect>
@@ -803,16 +785,16 @@ color: rgb(255, 255, 255);</string>
 color: rgb(255, 255, 255);</string>
     </property>
     <property name="text">
-     <string>INSIDE:     70°</string>
+     <string>INSIDE:    70°</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_5">
     <property name="geometry">
      <rect>
-      <x>670</x>
-      <y>140</y>
-      <width>31</width>
-      <height>51</height>
+      <x>710</x>
+      <y>80</y>
+      <width>41</width>
+      <height>21</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -820,16 +802,54 @@ color: rgb(255, 255, 255);</string>
 color: rgb(255, 255, 255);</string>
     </property>
     <property name="text">
-     <string>0°</string>
+     <string>15°</string>
+    </property>
+   </widget>
+   <widget class="QGraphicsView" name="profileView">
+    <property name="geometry">
+     <rect>
+      <x>690</x>
+      <y>0</y>
+      <width>81</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border-width: 0px; border-style: solid</string>
+    </property>
+    <property name="verticalScrollBarPolicy">
+     <enum>Qt::ScrollBarAlwaysOff</enum>
+    </property>
+    <property name="horizontalScrollBarPolicy">
+     <enum>Qt::ScrollBarAlwaysOff</enum>
+    </property>
+   </widget>
+   <widget class="QGraphicsView" name="faceView">
+    <property name="geometry">
+     <rect>
+      <x>790</x>
+      <y>0</y>
+      <width>91</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border-width: 0px; border-style: solid</string>
+    </property>
+    <property name="verticalScrollBarPolicy">
+     <enum>Qt::ScrollBarAlwaysOff</enum>
+    </property>
+    <property name="horizontalScrollBarPolicy">
+     <enum>Qt::ScrollBarAlwaysOff</enum>
     </property>
    </widget>
    <widget class="QLabel" name="label_6">
     <property name="geometry">
      <rect>
-      <x>860</x>
-      <y>140</y>
-      <width>31</width>
-      <height>51</height>
+      <x>820</x>
+      <y>80</y>
+      <width>41</width>
+      <height>21</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -837,25 +857,54 @@ color: rgb(255, 255, 255);</string>
 color: rgb(255, 255, 255);</string>
     </property>
     <property name="text">
-     <string>0°</string>
+     <string>15°</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="angleTest">
-    <property name="geometry">
-     <rect>
-      <x>90</x>
-      <y>130</y>
-      <width>131</width>
-      <height>141</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="flat">
-     <bool>true</bool>
-    </property>
-   </widget>
+   <zorder>fanSlider</zorder>
+   <zorder>label</zorder>
+   <zorder>fanLabel</zorder>
+   <zorder>both_i</zorder>
+   <zorder>defrost_i</zorder>
+   <zorder>feetDef_i</zorder>
+   <zorder>feet_i</zorder>
+   <zorder>head_i</zorder>
+   <zorder>heatSeater_i</zorder>
+   <zorder>both_L</zorder>
+   <zorder>feet_L</zorder>
+   <zorder>head_L</zorder>
+   <zorder>feetDef_L</zorder>
+   <zorder>defrost_L</zorder>
+   <zorder>heatSeater_L</zorder>
+   <zorder>both</zorder>
+   <zorder>feet</zorder>
+   <zorder>head</zorder>
+   <zorder>feetDef</zorder>
+   <zorder>defrost</zorder>
+   <zorder>heatSeater</zorder>
+   <zorder>horizontalSlider</zorder>
+   <zorder>insideAir_i</zorder>
+   <zorder>outsideAir_i_2</zorder>
+   <zorder>outsideAir_i_3</zorder>
+   <zorder>outsideAir_i</zorder>
+   <zorder>heatSeater_L_2</zorder>
+   <zorder>heatSeater_i_2</zorder>
+   <zorder>heatSeater_2</zorder>
+   <zorder>outsideTemp</zorder>
+   <zorder>AC_i</zorder>
+   <zorder>insideAir_L</zorder>
+   <zorder>AC_L</zorder>
+   <zorder>outsideAir_L</zorder>
+   <zorder>insideAir</zorder>
+   <zorder>AC</zorder>
+   <zorder>outsideAir</zorder>
+   <zorder>dayLight_i</zorder>
+   <zorder>dayLight_L</zorder>
+   <zorder>dayLight</zorder>
+   <zorder>label_4</zorder>
+   <zorder>profileView</zorder>
+   <zorder>faceView</zorder>
+   <zorder>label_6</zorder>
+   <zorder>label_5</zorder>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>

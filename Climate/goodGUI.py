@@ -29,6 +29,19 @@ class UI(QMainWindow):
 		self.pitch = 0
 		self.roll = 0
 
+		profilePic = QtGui.QPixmap("profile.png").scaled(50, 50)
+		scene = QGraphicsScene()
+		scene.addPixmap(profilePic)
+		self.profileView.setScene(scene)
+
+		facePic = QtGui.QPixmap("face.png").scaled(50, 50)
+		scene = QGraphicsScene()
+		scene.addPixmap(facePic)
+		self.faceView.setScene(scene)
+
+		self.profileView.rotate(15)
+		self.faceView.rotate(15)
+
 		self.both.clicked.connect(self.setBoth)
 		self.feet.clicked.connect(self.setFeet)
 		self.head.clicked.connect(self.setHead)
@@ -45,20 +58,9 @@ class UI(QMainWindow):
 
 		self.dayLight.clicked.connect(self.setDayLight)
 
-		self.angleTest.clicked.connect(self.angle)
-
-	def paintEvent(self, event):
-		painter = QtGui.QPainter(self)
-		painter.setPen(QtCore.Qt.white)
-		#pic = QPixmap("profile.png")
-		painter.translate(600, 10)
-		painter.rotate(-10)
-		#painter.drawPixmap(0, 0, pic)
-		painter.drawText(0,0, "hello")
-		painter.end()
-
 
 	def loop(self):
+		#self.angle()
 		print("running")
 
 	def setBoth(self):
@@ -130,8 +132,9 @@ class UI(QMainWindow):
 			return
 
 	def angle(self):
-		for i in range(-30, 30):
-			time.sleep(0.5)
+		self.profileView.rotate(1)
+		self.faceView.rotate(1)
+			
 
 	def clearAll(self):
 		self.both_L.setStyleSheet("background-color: rgb(52, 59, 72);")
