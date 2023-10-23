@@ -32,9 +32,9 @@
    <widget class="QSlider" name="fanSlider">
     <property name="geometry">
      <rect>
-      <x>40</x>
+      <x>30</x>
       <y>70</y>
-      <width>22</width>
+      <width>71</width>
       <height>285</height>
      </rect>
     </property>
@@ -127,7 +127,7 @@ font: 700 28pt &quot;Modern&quot;;</string>
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap>/home/pi/Documents/repos/Stacy/Climate/both.png</pixmap>
+     <pixmap>../../../../../../home/pi/Documents/repos/Stacy/Climate/both.png</pixmap>
     </property>
     <property name="scaledContents">
      <bool>true</bool>
