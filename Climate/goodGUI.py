@@ -146,6 +146,6 @@ class UI(QMainWindow):
 
 app = QApplication(sys.argv)        # start PyQT
 window = UI()
-#window.setWindowFlags(QtCore.Qt.FramelessWindowHint)
+window.setWindowFlags(QtCore.Qt.FramelessWindowHint)
 window.show()
 app.exec_()

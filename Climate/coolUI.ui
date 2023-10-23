@@ -91,7 +91,7 @@ QSlider::add-page:vertical {
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap>../../../../OneDrive/Pictures/fan.png</pixmap>
+     <pixmap>fan.png</pixmap>
     </property>
     <property name="scaledContents">
      <bool>true</bool>
@@ -127,7 +127,7 @@ font: 700 28pt &quot;Modern&quot;;</string>
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap>../../../../OneDrive/Pictures/both.png</pixmap>
+     <pixmap>/home/pi/Documents/repos/Stacy/Climate/both.png</pixmap>
     </property>
     <property name="scaledContents">
      <bool>true</bool>
@@ -146,7 +146,7 @@ font: 700 28pt &quot;Modern&quot;;</string>
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap>../../../../OneDrive/Pictures/defrost.png</pixmap>
+     <pixmap>defrost.png</pixmap>
     </property>
     <property name="scaledContents">
      <bool>true</bool>
@@ -165,7 +165,7 @@ font: 700 28pt &quot;Modern&quot;;</string>
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap>../../../../OneDrive/Pictures/defrostFeet.png</pixmap>
+     <pixmap>defrostFeet.png</pixmap>
     </property>
     <property name="scaledContents">
      <bool>true</bool>
@@ -184,7 +184,7 @@ font: 700 28pt &quot;Modern&quot;;</string>
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap>../../../../OneDrive/Pictures/feet.png</pixmap>
+     <pixmap>feet.png</pixmap>
     </property>
     <property name="scaledContents">
      <bool>true</bool>
@@ -203,7 +203,7 @@ font: 700 28pt &quot;Modern&quot;;</string>
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap>../../../../OneDrive/Pictures/head.png</pixmap>
+     <pixmap>head.png</pixmap>
     </property>
     <property name="scaledContents">
      <bool>true</bool>
@@ -222,7 +222,7 @@ font: 700 28pt &quot;Modern&quot;;</string>
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap>../../../../OneDrive/Pictures/otherSeat.png</pixmap>
+     <pixmap>otherSeat.png</pixmap>
     </property>
     <property name="scaledContents">
      <bool>true</bool>
@@ -476,7 +476,7 @@ QSlider::add-page:horizontal {
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap>../../../../OneDrive/Pictures/insideAir.png</pixmap>
+     <pixmap>insideAir.png</pixmap>
     </property>
     <property name="scaledContents">
      <bool>true</bool>
@@ -495,7 +495,7 @@ QSlider::add-page:horizontal {
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap>../../../../OneDrive/Pictures/hot.png</pixmap>
+     <pixmap>hot.png</pixmap>
     </property>
     <property name="scaledContents">
      <bool>true</bool>
@@ -514,7 +514,7 @@ QSlider::add-page:horizontal {
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap>../../../../OneDrive/Pictures/cold.png</pixmap>
+     <pixmap>cold.png</pixmap>
     </property>
     <property name="scaledContents">
      <bool>true</bool>
@@ -533,7 +533,7 @@ QSlider::add-page:horizontal {
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap>../../../../OneDrive/Pictures/outsideAir.png</pixmap>
+     <pixmap>outsideAir.png</pixmap>
     </property>
     <property name="scaledContents">
      <bool>true</bool>
@@ -568,7 +568,7 @@ QSlider::add-page:horizontal {
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap>../../../../OneDrive/Pictures/heatSetaer.png</pixmap>
+     <pixmap>heatSetaer.png</pixmap>
     </property>
     <property name="scaledContents">
      <bool>true</bool>
@@ -733,7 +733,7 @@ color: rgb(255, 255, 255);</string>
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap>../../../../OneDrive/Pictures/headlights.png</pixmap>
+     <pixmap>headlights.png</pixmap>
     </property>
     <property name="scaledContents">
      <bool>true</bool>
