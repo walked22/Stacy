@@ -15,11 +15,11 @@ from PyQt5.QtGui import QColor
 #s.system('modprobe w1-gpio')  # Turns on the GPIO module
 #os.system('modprobe w1-therm') # Turns on the Temperature module
 
-base_dir = '/sys/bus/w1/devices/'
-device_folder = glob.glob(base_dir + '28-031097944331')[0]
-device_folder2 = glob.glob(base_dir + '28-0309979409fe')[0]
-device_file = device_folder + '/w1_slave'
-device_file2 = device_folder2 + '/w1_slave'
+#base_dir = '/sys/bus/w1/devices/'
+#device_folder = glob.glob(base_dir + '28-031097944331')[0]
+#device_folder2 = glob.glob(base_dir + '28-0309979409fe')[0]
+#device_file = device_folder + '/w1_slave'
+#device_file2 = device_folder2 + '/w1_slave'
 '''
 try:
 	ser=serial.Serial("/dev/ttyACM0",9600)  #change ACM number as found from ls /dev/tty/ACM*
@@ -80,7 +80,8 @@ class UI(QMainWindow):
 
 	def loop(self):
 		#self.angle()
-		print("running")
+		pass
+		#print("running")
 
 	def setBoth(self):
 		self.clearAll()
