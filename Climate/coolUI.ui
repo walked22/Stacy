@@ -72,6 +72,9 @@ QSlider::add-page:vertical {
     <property name="value">
      <number>0</number>
     </property>
+    <property name="tracking">
+     <bool>false</bool>
+    </property>
     <property name="orientation">
      <enum>Qt::Vertical</enum>
     </property>
@@ -112,7 +115,7 @@ QSlider::add-page:vertical {
 font: 700 28pt &quot;Modern&quot;;</string>
     </property>
     <property name="text">
-     <string>1</string>
+     <string>0</string>
     </property>
    </widget>
    <widget class="QLabel" name="both_i">
@@ -459,6 +462,15 @@ QSlider::add-page:horizontal {
     background-color: rgb(52, 59, 72);
 }
 */</string>
+    </property>
+    <property name="minimum">
+     <number>60</number>
+    </property>
+    <property name="maximum">
+     <number>90</number>
+    </property>
+    <property name="tracking">
+     <bool>false</bool>
     </property>
     <property name="orientation">
      <enum>Qt::Horizontal</enum>
