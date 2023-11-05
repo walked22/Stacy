@@ -12,6 +12,22 @@ from PyQt5.QtCore import QThread, pyqtSignal
 from PyQt5.QtGui import QColor
 #import serial
 
+#s.system('modprobe w1-gpio')  # Turns on the GPIO module
+#os.system('modprobe w1-therm') # Turns on the Temperature module
+
+base_dir = '/sys/bus/w1/devices/'
+device_folder = glob.glob(base_dir + '28-031097944331')[0]
+device_folder2 = glob.glob(base_dir + '28-0309979409fe')[0]
+device_file = device_folder + '/w1_slave'
+device_file2 = device_folder2 + '/w1_slave'
+'''
+try:
+	ser=serial.Serial("/dev/ttyACM0",9600)  #change ACM number as found from ls /dev/tty/ACM*
+except:
+	ser=serial.Serial("/dev/ttyACM1",9600)
+	pass
+ser.baudrate=9600
+'''
 class UI(QMainWindow):
 	def __init__(self):
 		super(UI, self).__init__()
@@ -58,6 +74,9 @@ class UI(QMainWindow):
 
 		self.dayLight.clicked.connect(self.setDayLight)
 
+		self.tempSlider.valueChanged.connect(self.setTemp)
+		self.fanSlider.valueChanged.connect(self.setFan)
+
 
 	def loop(self):
 		#self.angle()
@@ -66,22 +85,32 @@ class UI(QMainWindow):
 	def setBoth(self):
 		self.clearAll()
 		self.both_L.setStyleSheet("background-color: rgb(61, 174, 233);")
+		print("both_")
+		#ser.write(b'both_')
 
 	def setFeet(self):
 		self.clearAll()
 		self.feet_L.setStyleSheet("background-color: rgb(61, 174, 233);")
+		print("feet_")
+		#ser.write(b'feet_')
 
 	def setHead(self):
 		self.clearAll()
 		self.head_L.setStyleSheet("background-color: rgb(61, 174, 233);")
+		print("head_")
+		#ser.write(b'head_')
 
 	def setFeetDef(self):
 		self.clearAll()
 		self.feetDef_L.setStyleSheet("background-color: rgb(61, 174, 233);")
+		print("def_f")
+		#ser.write(b'def_f')
 
 	def setDefrost(self):
 		self.clearAll()
 		self.defrost_L.setStyleSheet("background-color: rgb(61, 174, 233);")
+		print("deff_")
+		#ser.write(b'deff_')
 
 	def setHeatSeater(self):
 		if self.seatHeating == 0:
@@ -107,19 +136,27 @@ class UI(QMainWindow):
 		if self.cooling == 0:
 			self.AC_L.setStyleSheet("background-color: rgb(0, 208, 0);")
 			self.cooling = 1
+			print("ac_on")
+			#ser.write(b'ac_on')
 			return
 		if self.cooling == 1:
 			self.AC_L.setStyleSheet("background-color: rgb(52, 59, 72);")
 			self.cooling = 0
+			print("ac_ff")
+			#ser.write(b'ac_ff')
 			return
 
 	def setInsideAir(self):
 		self.outsideAir_L.setStyleSheet("background-color: rgb(52, 59, 72);")
 		self.insideAir_L.setStyleSheet("background-color: rgb(61, 174, 233);")
+		print("circ_")
+		#ser.write(b'circ_')
 		
 	def setOutsideAir(self):
 		self.insideAir_L.setStyleSheet("background-color: rgb(52, 59, 72);")
 		self.outsideAir_L.setStyleSheet("background-color: rgb(61, 174, 233);")
+		print("circn")
+		#ser.write(b'circn')
 
 	def setDayLight(self):
 		if self.bright == 0:
@@ -134,7 +171,18 @@ class UI(QMainWindow):
 	def angle(self):
 		self.profileView.rotate(1)
 		self.faceView.rotate(1)
-			
+
+	def setTemp(self):
+		t = self.tempSlider.value()
+		temp = str(t)+"deg"
+		print(temp)
+		#ser.write(temp.encode())
+
+	def setFan(self):
+		fanSpeed = "fan_" + str(self.fanSlider.value())
+		print(fanSpeed)
+		#ser.write(b'fanSpeed')
+					
 
 	def clearAll(self):
 		self.both_L.setStyleSheet("background-color: rgb(52, 59, 72);")

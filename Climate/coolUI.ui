@@ -421,7 +421,7 @@ font: 700 28pt &quot;Modern&quot;;</string>
      <bool>true</bool>
     </property>
    </widget>
-   <widget class="QSlider" name="horizontalSlider">
+   <widget class="QSlider" name="tempSlider">
     <property name="geometry">
      <rect>
       <x>190</x>
@@ -882,7 +882,7 @@ color: rgb(255, 255, 255);</string>
    <zorder>feetDef</zorder>
    <zorder>defrost</zorder>
    <zorder>heatSeater</zorder>
-   <zorder>horizontalSlider</zorder>
+   <zorder>tempSlider</zorder>
    <zorder>insideAir_i</zorder>
    <zorder>outsideAir_i_2</zorder>
    <zorder>outsideAir_i_3</zorder>
