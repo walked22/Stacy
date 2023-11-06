@@ -22,14 +22,14 @@ import math
 #device_folder2 = glob.glob(base_dir + '28-0309979409fe')[0]
 #device_file = device_folder + '/w1_slave'
 #device_file2 = device_folder2 + '/w1_slave'
-'''
+
 try:
 	ser=serial.Serial("/dev/ttyACM0",9600)  #change ACM number as found from ls /dev/tty/ACM*
 except:
 	ser=serial.Serial("/dev/ttyACM1",9600)
 	pass
 ser.baudrate=9600
-'''
+
 sensor = mpu6050(0X68)
 pitches = [0]*10
 rolls = [0]*10
@@ -205,8 +205,8 @@ class UI(QMainWindow):
 		self.faceView.rotate(newRoll)
 		self.lastPitch = pitch
 		self.lastRoll = roll
-		self.label_5.setText(str(round(pitch)) + u'\xb0')
-		self.label_6.setText(str(round(roll)) + u'\xb0')
+		self.pitchLabel.setText(str(round(pitch)) + u'\xb0')
+		self.rollLabel.setText(str(round(roll)) + u'\xb0')
 
 	def setTemp(self):
 		t = self.tempSlider.value()
