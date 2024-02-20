@@ -13,6 +13,21 @@ from PyQt5.QtGui import QColor
 import serial
 from mpu6050 import mpu6050
 import math
+import gpiod
+
+chip = gpiod.Chip('gpiochip4')
+driverRelay = chip.get_line(14)
+passengerRelay = chip.get_line(15)
+lightRelay = chip.get_line(18)
+blankRelay = chip.get_line(17)
+driverRelay.request(consumer="Relay", type=gpiod.LINE_REQ_DIR_OUT)
+passengerRelay.request(consumer="Relay", type=gpiod.LINE_REQ_DIR_OUT)
+lightRelay.request(consumer="Relay", type=gpiod.LINE_REQ_DIR_OUT)
+blankRelay.request(consumer="Relay", type=gpiod.LINE_REQ_DIR_OUT)
+driverRelay.set_value(1)
+passengerRelay.set_value(1)
+lightRelay.set_value(1)
+blankRelay.set_value(1)
 
 #s.system('modprobe w1-gpio')  # Turns on the GPIO module
 #os.system('modprobe w1-therm') # Turns on the Temperature module
@@ -23,12 +38,12 @@ import math
 #device_file = device_folder + '/w1_slave'
 #device_file2 = device_folder2 + '/w1_slave'
 
-try:
-	ser=serial.Serial("/dev/ttyACM0",9600)  #change ACM number as found from ls /dev/tty/ACM*
-except:
-	ser=serial.Serial("/dev/ttyACM1",9600)
-	pass
-ser.baudrate=9600
+#try:
+#	ser=serial.Serial("/dev/ttyACM0",9600)  #change ACM number as found from ls /dev/tty/ACM*
+#except:
+#	ser=serial.Serial("/dev/ttyACM1",9600)
+#	pass
+#ser.baudrate=9600
 
 sensor = mpu6050(0X68)
 pitches = [0]*10
@@ -146,20 +161,24 @@ class UI(QMainWindow):
 		if self.seatHeating == 0:
 			self.heatSeater_L.setStyleSheet("background-color: rgb(208, 0, 0);")
 			self.seatHeating = 1
+			driverRelay.set_value(0)
 			return
 		if self.seatHeating == 1:
 			self.heatSeater_L.setStyleSheet("background-color: rgb(52, 59, 72);")
 			self.seatHeating = 0
+			driverRelay.set_value(1)
 			return
 
 	def setHeatSeater_2(self):
 		if self.seatHeating_2 == 0:
 			self.heatSeater_L_2.setStyleSheet("background-color: rgb(208, 0, 0);")
 			self.seatHeating_2 = 1
+			passengerRelay.set_value(0)
 			return
 		if self.seatHeating_2 == 1:
 			self.heatSeater_L_2.setStyleSheet("background-color: rgb(52, 59, 72);")
 			self.seatHeating_2 = 0
+			passengerRelay.set_value(1)
 			return
 
 	def setAC(self):
@@ -192,10 +211,12 @@ class UI(QMainWindow):
 		if self.bright == 0:
 			self.dayLight_L.setStyleSheet("background-color: rgb(255, 255, 255);")
 			self.bright = 1
+			lightRelay.set_value(0)
 			return
 		if self.bright == 1:
 			self.dayLight_L.setStyleSheet("background-color: rgb(52, 59, 72);")
 			self.bright = 0
+			lightRelay.set_value(1)
 			return
 
 	def angle(self, pitch, roll):
