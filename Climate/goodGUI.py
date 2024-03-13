@@ -14,6 +14,7 @@ import serial
 from mpu6050 import mpu6050
 import math
 import gpiod
+import csv
 
 chip = gpiod.Chip('gpiochip4')
 driverRelay = chip.get_line(14)
@@ -29,11 +30,11 @@ passengerRelay.set_value(1)
 lightRelay.set_value(1)
 blankRelay.set_value(1)
 
-#s.system('modprobe w1-gpio')  # Turns on the GPIO module
+#os.system('modprobe w1-gpio')  # Turns on the GPIO module
 #os.system('modprobe w1-therm') # Turns on the Temperature module
 
 #base_dir = '/sys/bus/w1/devices/'
-#device_folder = glob.glob(base_dir + '28-031097944331')[0]
+#device_folder = glob.glob(base_dir + '28-030897942ebd')[0]
 #device_folder2 = glob.glob(base_dir + '28-0309979409fe')[0]
 #device_file = device_folder + '/w1_slave'
 #device_file2 = device_folder2 + '/w1_slave'
@@ -57,7 +58,7 @@ class UI(QMainWindow):
 		self.show()
 		self.timer = QtCore.QTimer()
 		self.timer.timeout.connect(self.loop)
-		self.timer.start(10)
+		self.timer.start(50)
 
 		self.counter = 0
 		self.seatHeating = 0
@@ -67,18 +68,18 @@ class UI(QMainWindow):
 		self.pitch = 0
 		self.roll = 0
 
-		profilePic = QtGui.QPixmap("profile.png").scaled(50, 50)
-		scene = QGraphicsScene()
-		scene.addPixmap(profilePic)
-		self.profileView.setScene(scene)
+		#profilePic = QtGui.QPixmap("profile.png").scaled(50, 50)
+		#scene = QGraphicsScene()
+		#scene.addPixmap(profilePic)
+		#self.profileView.setScene(scene)
 
-		facePic = QtGui.QPixmap("face.png").scaled(50, 50)
-		scene = QGraphicsScene()
-		scene.addPixmap(facePic)
-		self.faceView.setScene(scene)
+		#facePic = QtGui.QPixmap("face.png").scaled(50, 50)
+		#scene = QGraphicsScene()
+		#scene.addPixmap(facePic)
+		#self.faceView.setScene(scene)
 
-		self.profileView.rotate(0)
-		self.faceView.rotate(0)
+		#self.profileView.rotate(0)
+		#self.faceView.rotate(0)
 
 		self.both.clicked.connect(self.setBoth)
 		self.feet.clicked.connect(self.setFeet)
@@ -109,6 +110,7 @@ class UI(QMainWindow):
 		x = float(self.sensor.get_accel_data()['x'])
 		y = float(self.sensor.get_accel_data()['y'])
 		z = float(self.sensor.get_accel_data()['z'])
+		temp = self.getTemp()
 
 		pitch = math.degrees(math.atan(y/z))
 		roll = math.degrees(math.atan(x/z))
@@ -126,6 +128,12 @@ class UI(QMainWindow):
 			self.counter1 = 0
 		self.counter1 += 1
 
+	def getTemp(self):
+		with open('temps.csv', 'r') as f:
+			csvReader = csv.reader(f)
+			for row in csvReader:
+				self.outsideTemp.setText("Outside: " + str(row[0]) + u'\N{DEGREE SIGN}')
+				self.label_4.setText("Inside:    " + str(row[1]) + u'\N{DEGREE SIGN}')
 
 	def setBoth(self):
 		self.clearAll()
@@ -222,8 +230,10 @@ class UI(QMainWindow):
 	def angle(self, pitch, roll):
 		newPitch = pitch - self.lastPitch
 		newRoll = roll - self.lastRoll
-		self.profileView.rotate(newPitch*-1)
-		self.faceView.rotate(newRoll)
+		#self.profileView.rotate(newPitch*-1)
+		#self.faceView.rotate(newRoll)
+		self.pitchSlider.setValue(round(pitch))
+		self.rollSlider.setValue(round(roll))
 		self.lastPitch = pitch
 		self.lastRoll = roll
 		self.pitchLabel.setText(str(round(pitch)) + u'\xb0')
@@ -246,7 +256,7 @@ class UI(QMainWindow):
 		self.head_L.setStyleSheet("background-color: rgb(52, 59, 72);")
 		self.feetDef_L.setStyleSheet("background-color: rgb(52, 59, 72);")
 		self.defrost_L.setStyleSheet("background-color: rgb(52, 59, 72);")
-
+		
 
 app = QApplication(sys.argv)        # start PyQT
 window = UI()
