@@ -54,8 +54,9 @@ counter = 0
 class UI(QMainWindow):
 	def __init__(self):
 		super(UI, self).__init__()
-		uic.loadUi("coolUI.ui", self)
+		uic.loadUi("/home/acar/Stacy/Climate/coolUI.ui", self)
 		self.show()
+		self.showMaximized()
 		self.timer = QtCore.QTimer()
 		self.timer.timeout.connect(self.loop)
 		self.timer.start(50)
@@ -129,11 +130,11 @@ class UI(QMainWindow):
 		self.counter1 += 1
 
 	def getTemp(self):
-		with open('temps.csv', 'r') as f:
+		with open('/home/acar/Stacy/Climate/temps.csv', 'r') as f:
 			csvReader = csv.reader(f)
 			for row in csvReader:
-				self.outsideTemp.setText("Outside: " + str(row[0]) + u'\N{DEGREE SIGN}')
-				self.label_4.setText("Inside:    " + str(row[1]) + u'\N{DEGREE SIGN}')
+				self.outsideTemp.setText(str(row[0]) + u'\N{DEGREE SIGN}')
+				self.label_4.setText(str(row[1]) + u'\N{DEGREE SIGN}')
 
 	def setBoth(self):
 		self.clearAll()
