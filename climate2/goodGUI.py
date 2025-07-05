@@ -18,6 +18,7 @@ from adafruit_servokit import ServoKit
 from numpy import interp
 
 kit = ServoKit(channels=16)
+#kit.servo[0].actuation_range = 500
 chip = gpiod.Chip('gpiochip4')
 fanLow = chip.get_line(17)
 fanMed1 = chip.get_line(18)
@@ -64,6 +65,7 @@ class UI(QMainWindow):
 		self.timer = QtCore.QTimer()
 		self.timer.timeout.connect(self.loop)
 		self.timer.start(50)
+		self.setCursor(Qt.BlankCursor)
 
 		self.counter = 0
 		self.seatHeating = 0
@@ -97,6 +99,7 @@ class UI(QMainWindow):
 		self.counter1 = 0
 		self.lastPitch = 0
 		self.lastRoll = 0
+		self.setBoth()
 
 	def loop(self):
 		x = float(self.sensor.get_accel_data()['x'])
@@ -116,33 +119,42 @@ class UI(QMainWindow):
 			self.angle(avgPitch, avgRoll)
 			self.counter1 = 0
 		self.counter1 += 1
-		
+
 		if killPin.get_value() == 1:
 			call("sudo shutdown -h now", shell=True)
 
 	def setBoth(self):
 		self.clearAll()
 		self.both_L.setStyleSheet("background-color: rgb(61, 174, 233);")
+		kit.servo[1].angle = 45 #45-130 deg, [1] = top servo (def)
+		kit.servo[2].angle = 88 #45-130 deg, [2] = bottom servo
 		print("both_")
 
 	def setFeet(self):
 		self.clearAll()
 		self.feet_L.setStyleSheet("background-color: rgb(61, 174, 233);")
+		kit.servo[2].angle = 130 #45-130 deg, [2] = bottom servo
 		print("feet_")
 
 	def setHead(self):
 		self.clearAll()
 		self.head_L.setStyleSheet("background-color: rgb(61, 174, 233);")
+		kit.servo[1].angle = 45 #45-130 deg
+		kit.servo[2].angle = 45 #45-130 deg
 		print("head_")
 
 	def setFeetDef(self):
 		self.clearAll()
 		self.feetDef_L.setStyleSheet("background-color: rgb(61, 174, 233);")
+		kit.servo[1].angle = 130 #45-130 deg
+		kit.servo[2].angle = 88 #45-130 deg
 		print("def_f")
 
 	def setDefrost(self):
 		self.clearAll()
 		self.defrost_L.setStyleSheet("background-color: rgb(61, 174, 233);")
+		kit.servo[1].angle = 130 #45-130 deg
+		kit.servo[2].angle = 45 #45-130 deg
 		print("deff_")
 
 	def setHeatSeater(self):
@@ -184,10 +196,12 @@ class UI(QMainWindow):
 	def setInsideAir(self):
 		self.outsideAir_L.setStyleSheet("background-color: rgb(52, 59, 72);")
 		self.insideAir_L.setStyleSheet("background-color: rgb(61, 174, 233);")
+		kit.servo[3].angle = 0 #0-90 deg, [3] = source servo
 
 	def setOutsideAir(self):
 		self.insideAir_L.setStyleSheet("background-color: rgb(52, 59, 72);")
 		self.outsideAir_L.setStyleSheet("background-color: rgb(61, 174, 233);")
+		kit.servo[3].angle = 90 #0-90 deg, [3] = source servo
 
 	def setDayLight(self):
 		if self.bright == 0:
@@ -214,9 +228,9 @@ class UI(QMainWindow):
 	def setTemp(self):
 		t = self.tempSlider.value()
 		print(t)
-		tempAngle = round(interp(t,[60,90],[70,110]))
+		tempAngle = round(interp(t,[60,90],[0,66]))
 		print(tempAngle)
-		#kit.servo[0].angle = tempAngle
+		kit.servo[0].angle = tempAngle
 
 	def setFan(self):
 		if self.fanSlider.value() == 0:
@@ -251,7 +265,7 @@ class UI(QMainWindow):
 		self.head_L.setStyleSheet("background-color: rgb(52, 59, 72);")
 		self.feetDef_L.setStyleSheet("background-color: rgb(52, 59, 72);")
 		self.defrost_L.setStyleSheet("background-color: rgb(52, 59, 72);")
-		
+
 
 app = QApplication(sys.argv)        # start PyQT
 window = UI()
