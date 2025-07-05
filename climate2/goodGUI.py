@@ -10,41 +10,45 @@ from PyQt5.QtWidgets import *
 from PyQt5.uic import loadUiType
 from PyQt5.QtCore import QThread, pyqtSignal
 from PyQt5.QtGui import QColor
-import serial
 from mpu6050 import mpu6050
 import math
 import gpiod
-import csv
+from subprocess import call
+from adafruit_servokit import ServoKit
+from numpy import interp
 
+kit = ServoKit(channels=16)
 chip = gpiod.Chip('gpiochip4')
-driverRelay = chip.get_line(14)
-passengerRelay = chip.get_line(15)
-lightRelay = chip.get_line(18)
-blankRelay = chip.get_line(17)
-driverRelay.request(consumer="Relay", type=gpiod.LINE_REQ_DIR_OUT)
-passengerRelay.request(consumer="Relay", type=gpiod.LINE_REQ_DIR_OUT)
-lightRelay.request(consumer="Relay", type=gpiod.LINE_REQ_DIR_OUT)
-blankRelay.request(consumer="Relay", type=gpiod.LINE_REQ_DIR_OUT)
-driverRelay.set_value(1)
-passengerRelay.set_value(1)
-lightRelay.set_value(1)
-blankRelay.set_value(1)
+fanLow = chip.get_line(17)
+fanMed1 = chip.get_line(18)
+fanMed2 = chip.get_line(15)
+fanHigh = chip.get_line(14)
+lights = chip.get_line(25)
+driver = chip.get_line(8)
+passenger = chip.get_line(7)
+acRelay = chip.get_line(6)
 
-#os.system('modprobe w1-gpio')  # Turns on the GPIO module
-#os.system('modprobe w1-therm') # Turns on the Temperature module
+killPin = chip.get_line(23)
 
-#base_dir = '/sys/bus/w1/devices/'
-#device_folder = glob.glob(base_dir + '28-030897942ebd')[0]
-#device_folder2 = glob.glob(base_dir + '28-0309979409fe')[0]
-#device_file = device_folder + '/w1_slave'
-#device_file2 = device_folder2 + '/w1_slave'
+fanLow.request(consumer="Relay", type=gpiod.LINE_REQ_DIR_OUT, flags=gpiod.LINE_REQ_FLAG_BIAS_PULL_UP)
+fanMed1.request(consumer="Relay", type=gpiod.LINE_REQ_DIR_OUT, flags=gpiod.LINE_REQ_FLAG_BIAS_PULL_UP)
+fanMed2.request(consumer="Relay", type=gpiod.LINE_REQ_DIR_OUT, flags=gpiod.LINE_REQ_FLAG_BIAS_PULL_UP)
+fanHigh.request(consumer="Relay", type=gpiod.LINE_REQ_DIR_OUT, flags=gpiod.LINE_REQ_FLAG_BIAS_PULL_UP)
+lights.request(consumer="Relay", type=gpiod.LINE_REQ_DIR_OUT, flags=gpiod.LINE_REQ_FLAG_BIAS_PULL_UP)
+driver.request(consumer="Relay", type=gpiod.LINE_REQ_DIR_OUT, flags=gpiod.LINE_REQ_FLAG_BIAS_PULL_UP)
+passenger.request(consumer="Relay", type=gpiod.LINE_REQ_DIR_OUT, flags=gpiod.LINE_REQ_FLAG_BIAS_PULL_UP)
+acRelay.request(consumer="Relay", type=gpiod.LINE_REQ_DIR_OUT, flags=gpiod.LINE_REQ_FLAG_BIAS_PULL_UP)
 
-#try:
-#	ser=serial.Serial("/dev/ttyACM0",9600)  #change ACM number as found from ls /dev/tty/ACM*
-#except:
-#	ser=serial.Serial("/dev/ttyACM1",9600)
-#	pass
-#ser.baudrate=9600
+killPin.request(consumer="Button", type=gpiod.LINE_REQ_DIR_IN, flags=gpiod.LINE_REQ_FLAG_BIAS_PULL_UP)
+
+fanLow.set_value(1)
+fanMed1.set_value(1)
+fanMed2.set_value(1)
+fanHigh.set_value(1)
+lights.set_value(1)
+driver.set_value(1)
+passenger.set_value(1)
+acRelay.set_value(1)
 
 sensor = mpu6050(0X68)
 pitches = [0]*10
@@ -54,7 +58,7 @@ counter = 0
 class UI(QMainWindow):
 	def __init__(self):
 		super(UI, self).__init__()
-		uic.loadUi("/home/acar/Stacy/Climate/coolUI.ui", self)
+		uic.loadUi("/home/acar/repos/Stacy/climate2/coolUI.ui", self)
 		self.show()
 		self.showMaximized()
 		self.timer = QtCore.QTimer()
@@ -68,19 +72,6 @@ class UI(QMainWindow):
 		self.bright = 0
 		self.pitch = 0
 		self.roll = 0
-
-		#profilePic = QtGui.QPixmap("profile.png").scaled(50, 50)
-		#scene = QGraphicsScene()
-		#scene.addPixmap(profilePic)
-		#self.profileView.setScene(scene)
-
-		#facePic = QtGui.QPixmap("face.png").scaled(50, 50)
-		#scene = QGraphicsScene()
-		#scene.addPixmap(facePic)
-		#self.faceView.setScene(scene)
-
-		#self.profileView.rotate(0)
-		#self.faceView.rotate(0)
 
 		self.both.clicked.connect(self.setBoth)
 		self.feet.clicked.connect(self.setFeet)
@@ -111,7 +102,6 @@ class UI(QMainWindow):
 		x = float(self.sensor.get_accel_data()['x'])
 		y = float(self.sensor.get_accel_data()['y'])
 		z = float(self.sensor.get_accel_data()['z'])
-		temp = self.getTemp()
 
 		pitch = math.degrees(math.atan(y/z))
 		roll = math.degrees(math.atan(x/z))
@@ -124,115 +114,96 @@ class UI(QMainWindow):
 			avgPitch = sum(self.pitches)/len(self.pitches)
 			avgRoll = sum(self.rolls)/len(self.rolls)
 			self.angle(avgPitch, avgRoll)
-			print("pitch: " + str(avgPitch))
-			#print("roll: " + str(avgRoll))
 			self.counter1 = 0
 		self.counter1 += 1
-
-	def getTemp(self):
-		with open('/home/acar/Stacy/Climate/temps.csv', 'r') as f:
-			csvReader = csv.reader(f)
-			for row in csvReader:
-				self.outsideTemp.setText(str(row[0]) + u'\N{DEGREE SIGN}')
-				self.label_4.setText(str(row[1]) + u'\N{DEGREE SIGN}')
+		
+		if killPin.get_value() == 1:
+			call("sudo shutdown -h now", shell=True)
 
 	def setBoth(self):
 		self.clearAll()
 		self.both_L.setStyleSheet("background-color: rgb(61, 174, 233);")
 		print("both_")
-		ser.write(b'both_')
 
 	def setFeet(self):
 		self.clearAll()
 		self.feet_L.setStyleSheet("background-color: rgb(61, 174, 233);")
 		print("feet_")
-		ser.write(b'feet_')
 
 	def setHead(self):
 		self.clearAll()
 		self.head_L.setStyleSheet("background-color: rgb(61, 174, 233);")
 		print("head_")
-		ser.write(b'head_')
 
 	def setFeetDef(self):
 		self.clearAll()
 		self.feetDef_L.setStyleSheet("background-color: rgb(61, 174, 233);")
 		print("def_f")
-		ser.write(b'def_f')
 
 	def setDefrost(self):
 		self.clearAll()
 		self.defrost_L.setStyleSheet("background-color: rgb(61, 174, 233);")
 		print("deff_")
-		ser.write(b'deff_')
 
 	def setHeatSeater(self):
 		if self.seatHeating == 0:
 			self.heatSeater_L.setStyleSheet("background-color: rgb(208, 0, 0);")
 			self.seatHeating = 1
-			driverRelay.set_value(0)
+			driver.set_value(0)
 			return
 		if self.seatHeating == 1:
 			self.heatSeater_L.setStyleSheet("background-color: rgb(52, 59, 72);")
 			self.seatHeating = 0
-			driverRelay.set_value(1)
+			driver.set_value(1)
 			return
 
 	def setHeatSeater_2(self):
 		if self.seatHeating_2 == 0:
 			self.heatSeater_L_2.setStyleSheet("background-color: rgb(208, 0, 0);")
 			self.seatHeating_2 = 1
-			passengerRelay.set_value(0)
+			passenger.set_value(0)
 			return
 		if self.seatHeating_2 == 1:
 			self.heatSeater_L_2.setStyleSheet("background-color: rgb(52, 59, 72);")
 			self.seatHeating_2 = 0
-			passengerRelay.set_value(1)
+			passenger.set_value(1)
 			return
 
 	def setAC(self):
 		if self.cooling == 0:
 			self.AC_L.setStyleSheet("background-color: rgb(0, 208, 0);")
 			self.cooling = 1
-			print("ac_on")
-			ser.write(b'ac_on')
+			acRelay.set_value(0)
 			return
 		if self.cooling == 1:
 			self.AC_L.setStyleSheet("background-color: rgb(52, 59, 72);")
 			self.cooling = 0
-			print("ac_ff")
-			ser.write(b'ac_ff')
+			acRelay.set_value(1)
 			return
 
 	def setInsideAir(self):
 		self.outsideAir_L.setStyleSheet("background-color: rgb(52, 59, 72);")
 		self.insideAir_L.setStyleSheet("background-color: rgb(61, 174, 233);")
-		print("circ_")
-		ser.write(b'circ_')
 
 	def setOutsideAir(self):
 		self.insideAir_L.setStyleSheet("background-color: rgb(52, 59, 72);")
 		self.outsideAir_L.setStyleSheet("background-color: rgb(61, 174, 233);")
-		print("circn")
-		ser.write(b'circn')
 
 	def setDayLight(self):
 		if self.bright == 0:
 			self.dayLight_L.setStyleSheet("background-color: rgb(255, 255, 255);")
 			self.bright = 1
-			lightRelay.set_value(0)
+			lights.set_value(0)
 			return
 		if self.bright == 1:
 			self.dayLight_L.setStyleSheet("background-color: rgb(52, 59, 72);")
 			self.bright = 0
-			lightRelay.set_value(1)
+			lights.set_value(1)
 			return
 
 	def angle(self, pitch, roll):
 		newPitch = pitch - self.lastPitch
 		newRoll = roll - self.lastRoll
-		#self.profileView.rotate(newPitch*-1)
-		#self.faceView.rotate(newRoll)
 		self.pitchSlider.setValue(round(pitch))
 		self.rollSlider.setValue(round(roll))
 		self.lastPitch = pitch
@@ -242,14 +213,37 @@ class UI(QMainWindow):
 
 	def setTemp(self):
 		t = self.tempSlider.value()
-		temp = str(t)+"deg"
-		print(temp)
-		ser.write(temp.encode())
+		print(t)
+		tempAngle = round(interp(t,[60,90],[70,110]))
+		print(tempAngle)
+		#kit.servo[0].angle = tempAngle
 
 	def setFan(self):
-		fanSpeed = "fan_" + str(self.fanSlider.value())
-		print(fanSpeed)
-		ser.write(fanSpeed.encode())
+		if self.fanSlider.value() == 0:
+			fanLow.set_value(1)
+			fanMed1.set_value(1)
+			fanMed2.set_value(1)
+			fanHigh.set_value(1)
+		if self.fanSlider.value() == 1:
+			fanLow.set_value(0)
+			fanMed1.set_value(1)
+			fanMed2.set_value(1)
+			fanHigh.set_value(1)
+		if self.fanSlider.value() == 2:
+			fanLow.set_value(0)
+			fanMed1.set_value(0)
+			fanMed2.set_value(1)
+			fanHigh.set_value(1)
+		if self.fanSlider.value() == 3:
+			fanLow.set_value(0)
+			fanMed1.set_value(1)
+			fanMed2.set_value(0)
+			fanHigh.set_value(1)
+		if self.fanSlider.value() == 4:
+			fanLow.set_value(0)
+			fanMed1.set_value(1)
+			fanMed2.set_value(1)
+			fanHigh.set_value(0)
 
 	def clearAll(self):
 		self.both_L.setStyleSheet("background-color: rgb(52, 59, 72);")
