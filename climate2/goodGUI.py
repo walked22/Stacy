@@ -102,170 +102,217 @@ class UI(QMainWindow):
 		self.setBoth()
 
 	def loop(self):
-		x = float(self.sensor.get_accel_data()['x'])
-		y = float(self.sensor.get_accel_data()['y'])
-		z = float(self.sensor.get_accel_data()['z'])
+		try:
+			x = float(self.sensor.get_accel_data()['x'])
+			y = float(self.sensor.get_accel_data()['y'])
+			z = float(self.sensor.get_accel_data()['z'])
 
-		pitch = math.degrees(math.atan(y/z))
-		roll = math.degrees(math.atan(x/z))
-		self.pitches.append(pitch)
-		self.rolls.append(roll)
-		self.pitches.pop(0)
-		self.rolls.pop(0)
+			pitch = math.degrees(math.atan(y/z))
+			roll = math.degrees(math.atan(x/z))+20
+			self.pitches.append(pitch)
+			self.rolls.append(roll)
+			self.pitches.pop(0)
+			self.rolls.pop(0)
 
-		if self.counter1 == 9:
-			avgPitch = sum(self.pitches)/len(self.pitches)
-			avgRoll = sum(self.rolls)/len(self.rolls)
-			self.angle(avgPitch, avgRoll)
-			self.counter1 = 0
-		self.counter1 += 1
+			if self.counter1 == 9:
+				avgPitch = sum(self.pitches)/len(self.pitches)
+				avgRoll = sum(self.rolls)/len(self.rolls)
+				self.angle(avgPitch, avgRoll)
+				self.counter1 = 0
+			self.counter1 += 1
+		except:
+			pass
 
 		if killPin.get_value() == 1:
 			call("sudo shutdown -h now", shell=True)
 
 	def setBoth(self):
-		self.clearAll()
-		self.both_L.setStyleSheet("background-color: rgb(61, 174, 233);")
-		kit.servo[1].angle = 45 #45-130 deg, [1] = top servo (def)
-		kit.servo[2].angle = 88 #45-130 deg, [2] = bottom servo
-		print("both_")
+		try:
+			self.clearAll()
+			self.both_L.setStyleSheet("background-color: rgb(61, 174, 233);")
+			kit.servo[1].angle = 45 #45-130 deg, [1] = top servo (def)
+			kit.servo[2].angle = 88 #45-130 deg, [2] = bottom servo
+			print("both_")
+		except:
+		pass
 
 	def setFeet(self):
-		self.clearAll()
-		self.feet_L.setStyleSheet("background-color: rgb(61, 174, 233);")
-		kit.servo[2].angle = 130 #45-130 deg, [2] = bottom servo
-		print("feet_")
+		try:
+			self.clearAll()
+			self.feet_L.setStyleSheet("background-color: rgb(61, 174, 233);")
+			kit.servo[2].angle = 130 #45-130 deg, [2] = bottom servo
+			print("feet_")
+		except:
+			pass
 
 	def setHead(self):
-		self.clearAll()
-		self.head_L.setStyleSheet("background-color: rgb(61, 174, 233);")
-		kit.servo[1].angle = 45 #45-130 deg
-		kit.servo[2].angle = 45 #45-130 deg
-		print("head_")
+		try:
+			self.clearAll()
+			self.head_L.setStyleSheet("background-color: rgb(61, 174, 233);")
+			kit.servo[1].angle = 45 #45-130 deg
+			kit.servo[2].angle = 45 #45-130 deg
+			print("head_")
+		except:
+			pass
 
 	def setFeetDef(self):
-		self.clearAll()
-		self.feetDef_L.setStyleSheet("background-color: rgb(61, 174, 233);")
-		kit.servo[1].angle = 130 #45-130 deg
-		kit.servo[2].angle = 88 #45-130 deg
-		print("def_f")
+		try:
+			self.clearAll()
+			self.feetDef_L.setStyleSheet("background-color: rgb(61, 174, 233);")
+			kit.servo[1].angle = 130 #45-130 deg
+			kit.servo[2].angle = 88 #45-130 deg
+			print("def_f")
+		except:
+			pass
 
 	def setDefrost(self):
-		self.clearAll()
-		self.defrost_L.setStyleSheet("background-color: rgb(61, 174, 233);")
-		kit.servo[1].angle = 130 #45-130 deg
-		kit.servo[2].angle = 45 #45-130 deg
-		print("deff_")
+		try:
+			self.clearAll()
+			self.defrost_L.setStyleSheet("background-color: rgb(61, 174, 233);")
+			kit.servo[1].angle = 130 #45-130 deg
+			kit.servo[2].angle = 45 #45-130 deg
+			print("deff_")
+		except:
+			pass
 
 	def setHeatSeater(self):
-		if self.seatHeating == 0:
-			self.heatSeater_L.setStyleSheet("background-color: rgb(208, 0, 0);")
-			self.seatHeating = 1
-			driver.set_value(0)
-			return
-		if self.seatHeating == 1:
-			self.heatSeater_L.setStyleSheet("background-color: rgb(52, 59, 72);")
-			self.seatHeating = 0
-			driver.set_value(1)
-			return
+		try:
+			if self.seatHeating == 0:
+				self.heatSeater_L.setStyleSheet("background-color: rgb(208, 0, 0);")
+				self.seatHeating = 1
+				driver.set_value(0)
+				return
+			if self.seatHeating == 1:
+				self.heatSeater_L.setStyleSheet("background-color: rgb(52, 59, 72);")
+				self.seatHeating = 0
+				driver.set_value(1)
+				return
+		except:
+			pass
 
 	def setHeatSeater_2(self):
-		if self.seatHeating_2 == 0:
-			self.heatSeater_L_2.setStyleSheet("background-color: rgb(208, 0, 0);")
-			self.seatHeating_2 = 1
-			passenger.set_value(0)
-			return
-		if self.seatHeating_2 == 1:
-			self.heatSeater_L_2.setStyleSheet("background-color: rgb(52, 59, 72);")
-			self.seatHeating_2 = 0
-			passenger.set_value(1)
-			return
+		try:
+			if self.seatHeating_2 == 0:
+				self.heatSeater_L_2.setStyleSheet("background-color: rgb(208, 0, 0);")
+				self.seatHeating_2 = 1
+				passenger.set_value(0)
+				return
+			if self.seatHeating_2 == 1:
+				self.heatSeater_L_2.setStyleSheet("background-color: rgb(52, 59, 72);")
+				self.seatHeating_2 = 0
+				passenger.set_value(1)
+				return
+		except:
+			pass
 
 	def setAC(self):
-		if self.cooling == 0:
-			self.AC_L.setStyleSheet("background-color: rgb(0, 208, 0);")
-			self.cooling = 1
-			acRelay.set_value(0)
-			return
-		if self.cooling == 1:
-			self.AC_L.setStyleSheet("background-color: rgb(52, 59, 72);")
-			self.cooling = 0
-			acRelay.set_value(1)
-			return
+		try:
+			if self.cooling == 0:
+				self.AC_L.setStyleSheet("background-color: rgb(0, 208, 0);")
+				self.cooling = 1
+				acRelay.set_value(0)
+				return
+			if self.cooling == 1:
+				self.AC_L.setStyleSheet("background-color: rgb(52, 59, 72);")
+				self.cooling = 0
+				acRelay.set_value(1)
+				return
+		except:
+			pass
 
 	def setInsideAir(self):
-		self.outsideAir_L.setStyleSheet("background-color: rgb(52, 59, 72);")
-		self.insideAir_L.setStyleSheet("background-color: rgb(61, 174, 233);")
-		kit.servo[3].angle = 0 #0-90 deg, [3] = source servo
+		try:
+			self.outsideAir_L.setStyleSheet("background-color: rgb(52, 59, 72);")
+			self.insideAir_L.setStyleSheet("background-color: rgb(61, 174, 233);")
+			kit.servo[3].angle = 0 #0-90 deg, [3] = source servo
+		except:
+			pass
 
 	def setOutsideAir(self):
-		self.insideAir_L.setStyleSheet("background-color: rgb(52, 59, 72);")
-		self.outsideAir_L.setStyleSheet("background-color: rgb(61, 174, 233);")
-		kit.servo[3].angle = 90 #0-90 deg, [3] = source servo
+		try:
+			self.insideAir_L.setStyleSheet("background-color: rgb(52, 59, 72);")
+			self.outsideAir_L.setStyleSheet("background-color: rgb(61, 174, 233);")
+			kit.servo[3].angle = 90 #0-90 deg, [3] = source servo
+		except:
+			pass
 
 	def setDayLight(self):
-		if self.bright == 0:
-			self.dayLight_L.setStyleSheet("background-color: rgb(255, 255, 255);")
-			self.bright = 1
-			lights.set_value(0)
-			return
-		if self.bright == 1:
-			self.dayLight_L.setStyleSheet("background-color: rgb(52, 59, 72);")
-			self.bright = 0
-			lights.set_value(1)
-			return
+		try:
+			if self.bright == 0:
+				self.dayLight_L.setStyleSheet("background-color: rgb(255, 255, 255);")
+				self.bright = 1
+				lights.set_value(0)
+				return
+			if self.bright == 1:
+				self.dayLight_L.setStyleSheet("background-color: rgb(52, 59, 72);")
+				self.bright = 0
+				lights.set_value(1)
+				return
+		except:
+			pass
 
 	def angle(self, pitch, roll):
-		newPitch = pitch - self.lastPitch
-		newRoll = roll - self.lastRoll
-		self.pitchSlider.setValue(round(pitch))
-		self.rollSlider.setValue(round(roll))
-		self.lastPitch = pitch
-		self.lastRoll = roll
-		self.pitchLabel.setText(str(round(pitch)) + u'\xb0')
-		self.rollLabel.setText(str(round(roll)) + u'\xb0')
+		try:
+			newPitch = pitch - self.lastPitch
+			newRoll = roll - self.lastRoll
+			self.pitchSlider.setValue(round(pitch))
+			self.rollSlider.setValue(round(roll))
+			self.lastPitch = pitch
+			self.lastRoll = roll
+			self.pitchLabel.setText(str(round(pitch)) + u'\xb0')
+			self.rollLabel.setText(str(round(roll)) + u'\xb0')
+		except:
+			pass
 
 	def setTemp(self):
-		t = self.tempSlider.value()
-		print(t)
-		tempAngle = round(interp(t,[60,90],[0,66]))
-		print(tempAngle)
-		kit.servo[0].angle = tempAngle
+		try:
+			t = self.tempSlider.value()
+			print(t)
+			tempAngle = round(interp(t,[60,90],[0,66]))
+			print(tempAngle)
+			kit.servo[0].angle = tempAngle
+		except:
+			pass
 
 	def setFan(self):
-		if self.fanSlider.value() == 0:
-			fanLow.set_value(1)
-			fanMed1.set_value(1)
-			fanMed2.set_value(1)
-			fanHigh.set_value(1)
-		if self.fanSlider.value() == 1:
-			fanLow.set_value(0)
-			fanMed1.set_value(1)
-			fanMed2.set_value(1)
-			fanHigh.set_value(1)
-		if self.fanSlider.value() == 2:
-			fanLow.set_value(0)
-			fanMed1.set_value(0)
-			fanMed2.set_value(1)
-			fanHigh.set_value(1)
-		if self.fanSlider.value() == 3:
-			fanLow.set_value(0)
-			fanMed1.set_value(1)
-			fanMed2.set_value(0)
-			fanHigh.set_value(1)
-		if self.fanSlider.value() == 4:
-			fanLow.set_value(0)
-			fanMed1.set_value(1)
-			fanMed2.set_value(1)
-			fanHigh.set_value(0)
+		try:
+			if self.fanSlider.value() == 0:
+				fanLow.set_value(1)
+				fanMed1.set_value(1)
+				fanMed2.set_value(1)
+				fanHigh.set_value(1)
+			if self.fanSlider.value() == 1:
+				fanLow.set_value(0)
+				fanMed1.set_value(1)
+				fanMed2.set_value(1)
+				fanHigh.set_value(1)
+			if self.fanSlider.value() == 2:
+				fanLow.set_value(0)
+				fanMed1.set_value(0)
+				fanMed2.set_value(1)
+				fanHigh.set_value(1)
+			if self.fanSlider.value() == 3:
+				fanLow.set_value(0)
+				fanMed1.set_value(1)
+				fanMed2.set_value(0)
+				fanHigh.set_value(1)
+			if self.fanSlider.value() == 4:
+				fanLow.set_value(0)
+				fanMed1.set_value(1)
+				fanMed2.set_value(1)
+				fanHigh.set_value(0)
+		except:
+			pass
 
 	def clearAll(self):
-		self.both_L.setStyleSheet("background-color: rgb(52, 59, 72);")
-		self.feet_L.setStyleSheet("background-color: rgb(52, 59, 72);")
-		self.head_L.setStyleSheet("background-color: rgb(52, 59, 72);")
-		self.feetDef_L.setStyleSheet("background-color: rgb(52, 59, 72);")
-		self.defrost_L.setStyleSheet("background-color: rgb(52, 59, 72);")
-
+		try:
+			self.both_L.setStyleSheet("background-color: rgb(52, 59, 72);")
+			self.feet_L.setStyleSheet("background-color: rgb(52, 59, 72);")
+			self.head_L.setStyleSheet("background-color: rgb(52, 59, 72);")
+			self.feetDef_L.setStyleSheet("background-color: rgb(52, 59, 72);")
+			self.defrost_L.setStyleSheet("background-color: rgb(52, 59, 72);")
+		except:
+			pass
 
 app = QApplication(sys.argv)        # start PyQT
 window = UI()
